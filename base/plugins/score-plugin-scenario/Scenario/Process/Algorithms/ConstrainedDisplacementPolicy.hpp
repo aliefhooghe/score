@@ -12,11 +12,11 @@ class ConstrainedDisplacementPolicy
 public:
   static void init(
       Scenario::ProcessModel& scenario,
-      const QVector<Id<TimeSyncModel>>& draggedElements);
+      const QVector<Id<SynchronizationModel>>& draggedElements);
 
   static void computeDisplacement(
       Scenario::ProcessModel& scenario,
-      const QVector<Id<TimeSyncModel>>& draggedElements,
+      const QVector<Id<SynchronizationModel>>& draggedElements,
       const TimeVal& deltaTime,
       ElementsProperties& elementsProperties);
 

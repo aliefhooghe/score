@@ -16,7 +16,7 @@ namespace Scenario
 class EventModel;
 class StateModel;
 class ProcessModel;
-class TimeSyncModel;
+class SynchronizationModel;
 namespace Command
 {
 class SCORE_PLUGIN_SCENARIO_EXPORT CreateEvent_State final
@@ -29,8 +29,8 @@ class SCORE_PLUGIN_SCENARIO_EXPORT CreateEvent_State final
 public:
   CreateEvent_State(
       const Scenario::ProcessModel& scenario,
-      Id<TimeSyncModel>
-          timeSync,
+      Id<SynchronizationModel>
+          synchronization,
       double stateY);
 
   const Path<Scenario::ProcessModel>& scenarioPath() const
@@ -61,7 +61,7 @@ private:
 
   CreateState m_command;
 
-  Id<TimeSyncModel> m_timeSync;
+  Id<SynchronizationModel> m_synchronization;
 };
 }
 }

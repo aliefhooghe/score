@@ -7,7 +7,7 @@
 #include "CreateInterval.hpp"
 #include "CreateInterval_State.hpp"
 #include "CreateInterval_State_Event.hpp"
-#include "CreateInterval_State_Event_TimeSync.hpp"
+#include "CreateInterval_State_Event_Synchronization.hpp"
 #include "CreateSequence.hpp"
 #include <boost/range/adaptor/reversed.hpp>
 namespace Scenario
@@ -34,7 +34,7 @@ public:
           || cmd->key() == CreateEvent_State::static_key()
           || cmd->key() == CreateInterval_State::static_key()
           || cmd->key() == CreateInterval_State_Event::static_key()
-          || cmd->key() == CreateInterval_State_Event_TimeSync::static_key()
+          || cmd->key() == CreateInterval_State_Event_Synchronization::static_key()
           || cmd->key() == CreateSequence::static_key())
       {
         cmd->undo(ctx);

@@ -16,7 +16,7 @@
 #include <Scenario/Inspector/MetadataWidget.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
-#include <Scenario/Commands/TimeSync/SplitTimeSync.hpp>
+#include <Scenario/Commands/Synchronization/SplitSynchronization.hpp>
 #include <Scenario/Inspector/SelectionButton.hpp>
 #include <score/tools/std/Optional.hpp>
 #include <score/widgets/MarginLess.hpp>
@@ -297,7 +297,7 @@ void StateInspectorWidget::splitFromNode()
     if (scenar)
     {
         auto& ev = Scenario::parentEvent(m_model, *scenar);
-        auto& tn = Scenario::parentTimeSync(m_model, *scenar);
+        auto& tn = Scenario::parentSynchronization(m_model, *scenar);
         if (ev.states().size() > 1)
         {
             MacroCommandDispatcher<Command::SplitStateMacro> disp{m_commandDispatcher.stack()};
@@ -306,7 +306,7 @@ void StateInspectorWidget::splitFromNode()
                     *scenar, m_model.eventId(), {m_model.id()}
                 };
             disp.submitCommand(cmd);
-            auto cmd2 = new Scenario::Command::SplitTimeSync{
+            auto cmd2 = new Scenario::Command::SplitSynchronization{
                     tn, {cmd->newEvent()}
                 };
             disp.submitCommand(cmd2);
@@ -316,7 +316,7 @@ void StateInspectorWidget::splitFromNode()
         {
             if(tn.events().size() > 1)
             {
-                auto cmd = new Scenario::Command::SplitTimeSync{
+                auto cmd = new Scenario::Command::SplitSynchronization{
                         tn, {m_model.eventId()}
                 };
                 m_commandDispatcher.submitCommand(cmd);

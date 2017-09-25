@@ -25,7 +25,7 @@
 namespace Scenario
 {
 class StateModel;
-class TimeSyncModel;
+class SynchronizationModel;
 IntervalModel::IntervalModel(
     const Id<IntervalModel>& id,
     double yPos,

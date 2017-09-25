@@ -9,7 +9,7 @@
 #include <Scenario/Document/ScenarioDocument/ScenarioDocumentModel.hpp>
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <QApplication>
@@ -149,7 +149,7 @@ class TestObject : public QObject
                 doc->context().selectionStack.pushNewSelection({&elt});
                 qApp->processEvents();
             }
-            for(auto& elt : scenar.timeSyncs)
+            for(auto& elt : scenar.synchronizations)
             {
                 doc->context().selectionStack.pushNewSelection({&elt});
                 qApp->processEvents();

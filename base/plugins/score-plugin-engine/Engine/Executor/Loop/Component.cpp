@@ -8,7 +8,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <algorithm>
 #include <core/document/Document.hpp>
 #include <score/document/DocumentInterface.hpp>
@@ -22,7 +22,7 @@
 #include <Engine/Executor/EventComponent.hpp>
 #include <Engine/Executor/ProcessComponent.hpp>
 #include <Engine/Executor/StateComponent.hpp>
-#include <Engine/Executor/TimeSyncComponent.hpp>
+#include <Engine/Executor/SynchronizationComponent.hpp>
 #include <Scenario/Document/Interval/IntervalDurations.hpp>
 #include <score/tools/IdentifierGeneration.hpp>
 #include <Engine/Executor/DocumentPlugin.hpp>
@@ -112,10 +112,10 @@ Component::Component(
   auto main_end_event = *main_end_node->get_time_events().begin();
 
   using namespace Engine::Execution;
-  m_ossia_startTimeSync = new TimeSyncComponent(element.startTimeSync(),
-                                              system(), score::newId(element.startTimeSync()), this);
-  m_ossia_endTimeSync = new TimeSyncComponent(element.endTimeSync(),
-                                            system(), score::newId(element.endTimeSync()), this);
+  m_ossia_startSynchronization = new SynchronizationComponent(element.startSynchronization(),
+                                              system(), score::newId(element.startSynchronization()), this);
+  m_ossia_endSynchronization = new SynchronizationComponent(element.endSynchronization(),
+                                            system(), score::newId(element.endSynchronization()), this);
 
   m_ossia_startEvent = new EventComponent(element.startEvent(),
                                         system(), score::newId(element.startEvent()), this);
@@ -130,8 +130,8 @@ Component::Component(
 
   m_ossia_interval = new IntervalComponent(element.interval(), system(), score::newId(element.interval()), this);
 
-  m_ossia_startTimeSync->onSetup(main_start_node, m_ossia_startTimeSync->makeTrigger());
-  m_ossia_endTimeSync->onSetup(main_end_node, m_ossia_endTimeSync->makeTrigger());
+  m_ossia_startSynchronization->onSetup(main_start_node, m_ossia_startSynchronization->makeTrigger());
+  m_ossia_endSynchronization->onSetup(main_end_node, m_ossia_endSynchronization->makeTrigger());
   m_ossia_startEvent->onSetup(main_start_event, m_ossia_startEvent->makeExpression(), (ossia::time_event::offset_behavior)element.startEvent().offsetBehavior());
   m_ossia_endEvent->onSetup(main_end_event, m_ossia_endEvent->makeExpression(), (ossia::time_event::offset_behavior)element.endEvent().offsetBehavior());
   m_ossia_startState->onSetup(main_start_event);
@@ -144,8 +144,8 @@ Component::Component(
   element.startEvent().components().add(m_ossia_startEvent);
   element.endEvent().components().add(m_ossia_endEvent);
 
-  element.startTimeSync().components().add(m_ossia_startTimeSync);
-  element.endTimeSync().components().add(m_ossia_endTimeSync);
+  element.startSynchronization().components().add(m_ossia_startSynchronization);
+  element.endSynchronization().components().add(m_ossia_endSynchronization);
 
   element.interval().components().add(m_ossia_interval);
 }
@@ -181,17 +181,17 @@ void Component::cleanup()
     m_ossia_endEvent->cleanup();
     process().endEvent().components().remove(m_ossia_endEvent);
   }
-  if(m_ossia_startTimeSync)
+  if(m_ossia_startSynchronization)
   {
-    m_ossia_startTimeSync->OSSIATimeSync()->cleanup();
-    m_ossia_startTimeSync->cleanup();
-    process().startTimeSync().components().remove(m_ossia_startTimeSync);
+    m_ossia_startSynchronization->OSSIASynchronization()->cleanup();
+    m_ossia_startSynchronization->cleanup();
+    process().startSynchronization().components().remove(m_ossia_startSynchronization);
   }
-  if(m_ossia_endTimeSync)
+  if(m_ossia_endSynchronization)
   {
-    m_ossia_endTimeSync->OSSIATimeSync()->cleanup();
-    m_ossia_endTimeSync->cleanup();
-    process().endTimeSync().components().remove(m_ossia_endTimeSync);
+    m_ossia_endSynchronization->OSSIASynchronization()->cleanup();
+    m_ossia_endSynchronization->cleanup();
+    process().endSynchronization().components().remove(m_ossia_endSynchronization);
   }
 
   m_ossia_interval = nullptr;
@@ -199,8 +199,8 @@ void Component::cleanup()
   m_ossia_endState = nullptr;
   m_ossia_startEvent = nullptr;
   m_ossia_endEvent = nullptr;
-  m_ossia_startTimeSync = nullptr;
-  m_ossia_endTimeSync = nullptr;
+  m_ossia_startSynchronization = nullptr;
+  m_ossia_endSynchronization = nullptr;
 }
 
 void Component::stop()

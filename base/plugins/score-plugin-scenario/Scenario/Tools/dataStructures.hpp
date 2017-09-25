@@ -18,7 +18,7 @@ needed
 namespace Scenario
 {
 class IntervalModel;
-class TimeSyncModel;
+class SynchronizationModel;
 
 struct TimenodeProperties
 {
@@ -58,7 +58,7 @@ struct IntervalProperties : public IntervalSaveData
 
 struct ElementsProperties
 {
-  score::hash_map<Id<TimeSyncModel>, TimenodeProperties> timesyncs;
+  score::hash_map<Id<SynchronizationModel>, TimenodeProperties> timesyncs;
   score::hash_map<Id<IntervalModel>, IntervalProperties> intervals;
 };
 }

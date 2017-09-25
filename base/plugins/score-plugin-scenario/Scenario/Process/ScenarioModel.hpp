@@ -11,7 +11,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/ScenarioInterface.hpp>
 #include <Scenario/Process/ScenarioProcessMetadata.hpp>
 #include <boost/iterator/indirect_iterator.hpp>
@@ -74,9 +74,9 @@ public:
     return {map.begin(), map.end()};
   }
 
-  ElementContainer<TimeSyncModel> getTimeSyncs() const final override
+  ElementContainer<SynchronizationModel> getSynchronizations() const final override
   {
-    auto& map = timeSyncs.map().get();
+    auto& map = synchronizations.map().get();
     return {map.begin(), map.end()};
   }
 
@@ -89,9 +89,9 @@ public:
   {
     return ossia::ptr_find(events, id);
   }
-  TimeSyncModel* findTimeSync(const Id<TimeSyncModel>& id) const final override
+  SynchronizationModel* findSynchronization(const Id<SynchronizationModel>& id) const final override
   {
-    return ossia::ptr_find(timeSyncs, id);
+    return ossia::ptr_find(synchronizations, id);
   }
   StateModel* findState(const Id<StateModel>& id) const final override
   {
@@ -107,10 +107,10 @@ public:
   {
     return events.at(eventId);
   }
-  TimeSyncModel&
-  timeSync(const Id<TimeSyncModel>& timeSyncId) const final override
+  SynchronizationModel&
+  synchronization(const Id<SynchronizationModel>& synchronizationId) const final override
   {
-    return timeSyncs.at(timeSyncId);
+    return synchronizations.at(synchronizationId);
   }
   StateModel& state(const Id<StateModel>& stId) const final override
   {
@@ -121,9 +121,9 @@ public:
     return comments.at(cmtId);
   }
 
-  TimeSyncModel& startTimeSync() const final override
+  SynchronizationModel& startSynchronization() const final override
   {
-    return timeSyncs.at(m_startTimeSyncId);
+    return synchronizations.at(m_startSynchronizationId);
   }
 
   EventModel& startEvent() const
@@ -133,7 +133,7 @@ public:
 
   score::EntityMap<IntervalModel> intervals;
   score::EntityMap<EventModel> events;
-  score::EntityMap<TimeSyncModel> timeSyncs;
+  score::EntityMap<SynchronizationModel> synchronizations;
   score::EntityMap<StateModel> states;
   score::EntityMap<CommentBlockModel> comments;
 
@@ -197,7 +197,7 @@ private:
     fun(&ProcessModel::intervals);
     fun(&ProcessModel::states);
     fun(&ProcessModel::events);
-    fun(&ProcessModel::timeSyncs);
+    fun(&ProcessModel::synchronizations);
     fun(&ProcessModel::comments);
   }
   ProcessModel(
@@ -205,7 +205,7 @@ private:
       const Id<Process::ProcessModel>& id,
       QObject* parent);
 
-  Id<TimeSyncModel> m_startTimeSyncId{};
+  Id<SynchronizationModel> m_startSynchronizationId{};
 
   Id<EventModel> m_startEventId{};
 
@@ -250,8 +250,8 @@ QList<const T*> filterSelectionByType(const Container& sel)
 namespace Scenario
 {
 SCORE_PLUGIN_SCENARIO_EXPORT const QVector<Id<IntervalModel>>
-intervalsBeforeTimeSync(
-    const Scenario::ProcessModel&, const Id<TimeSyncModel>& timeSyncId);
+intervalsBeforeSynchronization(
+    const Scenario::ProcessModel&, const Id<SynchronizationModel>& synchronizationId);
 
 const StateModel*
 furthestSelectedState(const Scenario::ProcessModel& scenario);
@@ -266,9 +266,9 @@ inline auto& events(const Scenario::ProcessModel& scenar)
 {
   return scenar.events;
 }
-inline auto& timeSyncs(const Scenario::ProcessModel& scenar)
+inline auto& synchronizations(const Scenario::ProcessModel& scenar)
 {
-  return scenar.timeSyncs;
+  return scenar.synchronizations;
 }
 inline auto& states(const Scenario::ProcessModel& scenar)
 {
@@ -292,12 +292,12 @@ struct ElementTraits<Scenario::ProcessModel, EventModel>
           &events);
 };
 template <>
-struct ElementTraits<Scenario::ProcessModel, TimeSyncModel>
+struct ElementTraits<Scenario::ProcessModel, SynchronizationModel>
 {
   static const constexpr auto accessor
-      = static_cast<const score::EntityMap<TimeSyncModel>& (*)(const Scenario::
+      = static_cast<const score::EntityMap<SynchronizationModel>& (*)(const Scenario::
                                                             ProcessModel&)>(
-          &timeSyncs);
+          &synchronizations);
 };
 template <>
 struct ElementTraits<Scenario::ProcessModel, StateModel>

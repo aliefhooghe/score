@@ -4,7 +4,7 @@
 #include <QJsonValue>
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/ProcessPolicy.hpp>
 #include <algorithm>
 
@@ -45,8 +45,8 @@ SCORE_PLUGIN_SCENARIO_EXPORT void DataStreamWriter::write(
   base_scenario.m_interval
       = new IntervalModel{*this, base_scenario.m_parent};
 
-  base_scenario.m_startNode = new TimeSyncModel{*this, base_scenario.m_parent};
-  base_scenario.m_endNode = new TimeSyncModel{*this, base_scenario.m_parent};
+  base_scenario.m_startNode = new SynchronizationModel{*this, base_scenario.m_parent};
+  base_scenario.m_endNode = new SynchronizationModel{*this, base_scenario.m_parent};
 
   base_scenario.m_startEvent = new EventModel{*this, base_scenario.m_parent};
   base_scenario.m_endEvent = new EventModel{*this, base_scenario.m_parent};
@@ -92,10 +92,10 @@ SCORE_PLUGIN_SCENARIO_EXPORT void JSONObjectWriter::write(
       JSONObject::Deserializer{obj["Constraint"].toObject()},
       base_scenario.m_parent};
 
-  base_scenario.m_startNode = new TimeSyncModel{
+  base_scenario.m_startNode = new SynchronizationModel{
       JSONObject::Deserializer{obj["StartTimeNode"].toObject()},
       base_scenario.m_parent};
-  base_scenario.m_endNode = new TimeSyncModel{
+  base_scenario.m_endNode = new SynchronizationModel{
       JSONObject::Deserializer{obj["EndTimeNode"].toObject()},
       base_scenario.m_parent};
 

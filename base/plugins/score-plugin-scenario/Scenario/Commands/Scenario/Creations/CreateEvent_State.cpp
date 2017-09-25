@@ -23,13 +23,13 @@ namespace Command
 {
 CreateEvent_State::CreateEvent_State(
     const Scenario::ProcessModel& scenario,
-    Id<TimeSyncModel>
-        timeSync,
+    Id<SynchronizationModel>
+        synchronization,
     double stateY)
     : m_newEvent{getStrongId(scenario.events)}
     , m_createdName{RandomNameProvider::generateRandomName()}
     , m_command{scenario, m_newEvent, stateY}
-    , m_timeSync{std::move(timeSync)}
+    , m_synchronization{std::move(synchronization)}
 {
 }
 
@@ -48,7 +48,7 @@ void CreateEvent_State::redo(const score::DocumentContext& ctx) const
   // Create the event
   ScenarioCreate<EventModel>::redo(
       m_newEvent,
-      scenar.timeSync(m_timeSync),
+      scenar.synchronization(m_synchronization),
       {m_command.endStateY() - 0.1, m_command.endStateY() + 0.1},
       scenar);
 
@@ -60,13 +60,13 @@ void CreateEvent_State::redo(const score::DocumentContext& ctx) const
 
 void CreateEvent_State::serializeImpl(DataStreamInput& s) const
 {
-  s << m_newEvent << m_createdName << m_command.serialize() << m_timeSync;
+  s << m_newEvent << m_createdName << m_command.serialize() << m_synchronization;
 }
 
 void CreateEvent_State::deserializeImpl(DataStreamOutput& s)
 {
   QByteArray b;
-  s >> m_newEvent >> m_createdName >> b >> m_timeSync;
+  s >> m_newEvent >> m_createdName >> b >> m_synchronization;
 
   m_command.deserialize(b);
 }

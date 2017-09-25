@@ -76,6 +76,6 @@ private:
 
 SCORE_COMMAND_DECL_T(ChangeElementComments<IntervalModel>)
 SCORE_COMMAND_DECL_T(ChangeElementComments<EventModel>)
-SCORE_COMMAND_DECL_T(ChangeElementComments<TimeSyncModel>)
+SCORE_COMMAND_DECL_T(ChangeElementComments<SynchronizationModel>)
 SCORE_COMMAND_DECL_T(ChangeElementComments<StateModel>)
 SCORE_COMMAND_DECL_T(ChangeElementComments<Process::ProcessModel>)

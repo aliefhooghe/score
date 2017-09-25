@@ -9,7 +9,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Document/VerticalExtent.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 #include <Scenario/Process/Algorithms/ProcessPolicy.hpp>
@@ -37,35 +37,35 @@ CommentBlockModel& ScenarioCreate<CommentBlockModel>::redo(
   return *comment;
 }
 
-void ScenarioCreate<TimeSyncModel>::undo(
-    const Id<TimeSyncModel>& id, Scenario::ProcessModel& s)
+void ScenarioCreate<SynchronizationModel>::undo(
+    const Id<SynchronizationModel>& id, Scenario::ProcessModel& s)
 {
-  s.timeSyncs.remove(id);
+  s.synchronizations.remove(id);
 }
 
-TimeSyncModel& ScenarioCreate<TimeSyncModel>::redo(
-    const Id<TimeSyncModel>& id,
+SynchronizationModel& ScenarioCreate<SynchronizationModel>::redo(
+    const Id<SynchronizationModel>& id,
     const VerticalExtent& extent,
     const TimeVal& date,
     Scenario::ProcessModel& s)
 {
-  auto timeSync = new TimeSyncModel{id, extent, date, &s};
-  s.timeSyncs.add(timeSync);
+  auto synchronization = new SynchronizationModel{id, extent, date, &s};
+  s.synchronizations.add(synchronization);
 
-  return *timeSync;
+  return *synchronization;
 }
 
 void ScenarioCreate<EventModel>::undo(
     const Id<EventModel>& id, Scenario::ProcessModel& s)
 {
   auto& ev = s.event(id);
-  s.timeSync(ev.timeSync()).removeEvent(id);
+  s.synchronization(ev.synchronization()).removeEvent(id);
   s.events.remove(&ev);
 }
 
 EventModel& ScenarioCreate<EventModel>::redo(
     const Id<EventModel>& id,
-    TimeSyncModel& timesync,
+    SynchronizationModel& timesync,
     const VerticalExtent& extent,
     Scenario::ProcessModel& s)
 {
@@ -133,7 +133,7 @@ IntervalModel& ScenarioCreate<IntervalModel>::redo(
 
   const auto& sev = s.event(sst.eventId());
   const auto& eev = s.event(est.eventId());
-  const auto& tn = s.timeSync(eev.timeSync());
+  const auto& tn = s.synchronization(eev.synchronization());
 
   IntervalDurations::Algorithms::changeAllDurations(
       *interval, eev.date() - sev.date());

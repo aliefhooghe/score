@@ -26,9 +26,9 @@
 #include <Scenario/Document/State/StateModel.hpp>
 #include <Scenario/Document/State/StatePresenter.hpp>
 #include <Scenario/Document/State/StateView.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncView.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationView.hpp>
 #include <score/model/EntityMap.hpp>
 #include <score/model/IdentifiedObjectMap.hpp>
 #include <score/model/Identifier.hpp>

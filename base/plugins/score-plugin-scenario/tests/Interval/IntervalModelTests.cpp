@@ -6,7 +6,7 @@
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 
 #include <Scenario/Document/Interval/Slot.hpp>
 #include <Scenario/Process/Algorithms/StandardCreationPolicy.hpp>
@@ -82,7 +82,7 @@ private slots:
     auto int_0_id = getStrongId(s0->intervals());
     auto ev_0_id = getStrongId(s0->events());
     auto fv_0_id = Id<IntervalViewModel>{234};
-    auto tb_0_id = getStrongId(s0->timeSyncs());
+    auto tb_0_id = getStrongId(s0->synchronizations());
     StandardCreationPolicy::createIntervalAndEndEventFromEvent(
         *s0,
         s0->startEvent()->id(),
@@ -95,7 +95,7 @@ private slots:
     auto int_2_id = getStrongId(s0->intervals());
     auto fv_2_id = Id<IntervalViewModel>{454};
     auto ev_2_id = getStrongId(s0->events());
-    auto tb_2_id = getStrongId(s0->timeSyncs());
+    auto tb_2_id = getStrongId(s0->synchronizations());
     StandardCreationPolicy::createIntervalAndEndEventFromEvent(
         *s0,
         s0->startEvent()->id(),

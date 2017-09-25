@@ -24,7 +24,7 @@ private slots:
     EventData data{};
     data.dDate.setMSecs(10);
     data.relativeY = 0.8;
-    data.endTimeSyncId = Id<TimeSyncModel>(-1);
+    data.endSynchronizationId = Id<SynchronizationModel>(-1);
 
     CreateEventAfterEvent eventCmd(
         {

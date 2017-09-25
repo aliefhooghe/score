@@ -6,13 +6,13 @@ namespace Scenario
 
 void ConstrainedDisplacementPolicy::init(
         ProcessModel &scenario,
-        const QVector<Id<TimeSyncModel> > &draggedElements)
+        const QVector<Id<SynchronizationModel> > &draggedElements)
 {
 }
 
 void ConstrainedDisplacementPolicy::computeDisplacement(
         ProcessModel &scenario,
-        const QVector<Id<TimeSyncModel> > &draggedElements,
+        const QVector<Id<SynchronizationModel> > &draggedElements,
         const TimeVal &deltaTime,
         ElementsProperties &elementsProperties)
 {
@@ -20,7 +20,7 @@ void ConstrainedDisplacementPolicy::computeDisplacement(
     if(draggedElements.empty())
         return;
     auto tn_id = draggedElements[0];
-    auto& tn = scenario.timeSyncs.at(tn_id);
+    auto& tn = scenario.synchronizations.at(tn_id);
     const auto& intervalsBefore = Scenario::previousIntervals(tn, scenario);
     const auto& intervalsAfter = Scenario::nextIntervals(tn, scenario);
 

@@ -10,7 +10,7 @@ class SCORE_PLUGIN_SCENARIO_EXPORT CSPCoherencyCheckerInterface
 public:
   virtual ~CSPCoherencyCheckerInterface();
   virtual bool computeDisplacement(
-      const QVector<Id<Scenario::TimeSyncModel>>& positionnedElements,
+      const QVector<Id<Scenario::SynchronizationModel>>& positionnedElements,
       Scenario::ElementsProperties& elementsProperties)
       = 0;
 };

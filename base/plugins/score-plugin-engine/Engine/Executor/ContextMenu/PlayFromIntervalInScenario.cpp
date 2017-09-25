@@ -24,7 +24,7 @@ namespace Execution
 struct dfs_visitor_state
 {
   tsl::hopscotch_set<Scenario::IntervalModel*> intervals;
-  tsl::hopscotch_set<Scenario::TimeSyncModel*> nodes;
+  tsl::hopscotch_set<Scenario::SynchronizationModel*> nodes;
 };
 
 struct dfs_visitor : public boost::default_dfs_visitor
@@ -49,7 +49,7 @@ PlayFromIntervalScenarioPruner::intervalsToKeep() const
   Scenario::TimenodeGraph g{scenar};
 
   // First find the vertex matching the time sync after our interval
-  auto vertex = g.vertices().at(&Scenario::endTimeSync(interval, scenar));
+  auto vertex = g.vertices().at(&Scenario::endSynchronization(interval, scenar));
 
   // Do a depth-first search from where we're starting
   dfs_visitor vis;

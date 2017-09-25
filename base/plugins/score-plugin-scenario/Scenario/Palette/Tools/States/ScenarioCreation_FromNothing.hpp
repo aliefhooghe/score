@@ -1,6 +1,6 @@
 #pragma once
 #include "ScenarioCreationState.hpp"
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 
 #include <Scenario/Commands/Scenario/Displacement/MoveNewEvent.hpp>
 #include <Scenario/Commands/Scenario/Displacement/MoveNewState.hpp>
@@ -13,7 +13,7 @@
 #include <Scenario/Palette/Transitions/EventTransitions.hpp>
 #include <Scenario/Palette/Transitions/NothingTransitions.hpp>
 #include <Scenario/Palette/Transitions/StateTransitions.hpp>
-#include <Scenario/Palette/Transitions/TimeSyncTransitions.hpp>
+#include <Scenario/Palette/Transitions/SynchronizationTransitions.hpp>
 
 #include <QFinalState>
 
@@ -46,14 +46,14 @@ public:
       auto move_nothing = new StrongQState<MoveOnNothing>{mainState};
       auto move_state = new StrongQState<MoveOnState>{mainState};
       auto move_event = new StrongQState<MoveOnEvent>{mainState};
-      auto move_timesync = new StrongQState<MoveOnTimeSync>{mainState};
+      auto move_timesync = new StrongQState<MoveOnSynchronization>{mainState};
 
       pressed->setObjectName("Pressed");
       released->setObjectName("Released");
       move_nothing->setObjectName("Move on Nothing");
       move_state->setObjectName("Move on State");
       move_event->setObjectName("Move on Event");
-      move_timesync->setObjectName("Move on TimeSync");
+      move_timesync->setObjectName("Move on Synchronization");
 
       // General setup
       mainState->setInitialState(pressed);
@@ -84,10 +84,10 @@ public:
         createToEvent();
       });
 
-      // MoveOnNothing -> MoveOnTimeSync
+      // MoveOnNothing -> MoveOnSynchronization
       this->add_transition(move_nothing, move_timesync, [&]() {
         this->rollback();
-        createToTimeSync();
+        createToSynchronization();
       });
 
       /// MoveOnState -> ...
@@ -106,10 +106,10 @@ public:
         createToEvent();
       });
 
-      // MoveOnState -> MoveOnTimeSync
+      // MoveOnState -> MoveOnSynchronization
       this->add_transition(move_state, move_timesync, [&]() {
         this->rollback();
-        createToTimeSync();
+        createToSynchronization();
       });
 
       /// MoveOnEvent -> ...
@@ -129,33 +129,33 @@ public:
       score::make_transition<MoveOnEvent_Transition<Scenario_T>>(
           move_event, move_event, *this);
 
-      // MoveOnEvent -> MoveOnTimeSync
+      // MoveOnEvent -> MoveOnSynchronization
       this->add_transition(move_event, move_timesync, [&]() {
         this->rollback();
-        createToTimeSync();
+        createToSynchronization();
       });
 
-      /// MoveOnTimeSync -> ...
-      // MoveOnTimeSync -> MoveOnNothing
+      /// MoveOnSynchronization -> ...
+      // MoveOnSynchronization -> MoveOnNothing
       this->add_transition(move_timesync, move_nothing, [&]() {
         this->rollback();
         createToNothing();
       });
 
-      // MoveOnTimeSync -> MoveOnState
+      // MoveOnSynchronization -> MoveOnState
       this->add_transition(move_timesync, move_state, [&]() {
         this->rollback();
         createToState();
       });
 
-      // MoveOnTimeSync -> MoveOnEvent
+      // MoveOnSynchronization -> MoveOnEvent
       this->add_transition(move_timesync, move_event, [&]() {
         this->rollback();
         createToEvent();
       });
 
-      // MoveOnTimeSync -> MoveOnTimeSync
-      score::make_transition<MoveOnTimeSync_Transition<Scenario_T>>(
+      // MoveOnSynchronization -> MoveOnSynchronization
+      score::make_transition<MoveOnSynchronization_Transition<Scenario_T>>(
           move_timesync, move_timesync, *this);
 
       // What happens in each state.
@@ -284,10 +284,10 @@ private:
       this->createToEvent_base(this->createdStates.first());
     }
   }
-  void createToTimeSync()
+  void createToSynchronization()
   {
     createInitialState();
-    this->createToTimeSync_base(this->createdStates.first());
+    this->createToSynchronization_base(this->createdStates.first());
   }
 };
 }

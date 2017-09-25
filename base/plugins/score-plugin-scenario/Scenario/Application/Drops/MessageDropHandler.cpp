@@ -4,7 +4,7 @@
 
 #include <Scenario/Application/ScenarioValidity.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateStateMacro.hpp>
-#include <Scenario/Commands/Scenario/Creations/CreateTimeSync_Event_State.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateSynchronization_Event_State.hpp>
 #include <Scenario/Document/State/ItemModel/MessageItemModel.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <Scenario/Process/Temporal/TemporalScenarioPresenter.hpp>
@@ -21,8 +21,8 @@ namespace Scenario
 {
 static Scenario::StateModel* closestLeftState(Scenario::Point pt, const Scenario::ProcessModel& scenario)
 {
-  TimeSyncModel* cur_tn = &scenario.startTimeSync();
-  for(auto& tn : scenario.timeSyncs)
+  SynchronizationModel* cur_tn = &scenario.startSynchronization();
+  for(auto& tn : scenario.synchronizations)
   {
     auto date = tn.date();
     if(date > cur_tn->date() && date < pt.date)
@@ -141,14 +141,14 @@ bool MessageDropHandler::drop(
           = new Scenario::Command::CreateState{scenar, state->eventId(), pt.y};
       m.submitCommand(cmd1);
 
-      auto cmd2 = new Scenario::Command::CreateInterval_State_Event_TimeSync{
+      auto cmd2 = new Scenario::Command::CreateInterval_State_Event_Synchronization{
           scenar, cmd1->createdState(), pt.date, pt.y};
       m.submitCommand(cmd2);
       createdState = cmd2->createdState();
     }
     else
     {
-      auto cmd = new Scenario::Command::CreateInterval_State_Event_TimeSync{
+      auto cmd = new Scenario::Command::CreateInterval_State_Event_Synchronization{
           scenar, state->id(), pt.date, state->heightPercentage()};
       m.submitCommand(cmd);
       createdState = cmd->createdState();
@@ -157,7 +157,7 @@ bool MessageDropHandler::drop(
   else
   {
     // We create in the emptiness
-    auto cmd = new Scenario::Command::CreateTimeSync_Event_State(
+    auto cmd = new Scenario::Command::CreateSynchronization_Event_State(
         scenar, pt.date, pt.y);
     m.submitCommand(cmd);
     createdState = cmd->createdState();

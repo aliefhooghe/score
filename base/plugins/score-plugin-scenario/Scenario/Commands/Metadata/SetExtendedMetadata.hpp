@@ -76,6 +76,6 @@ private:
 
 SCORE_COMMAND_DECL_T(SetExtendedMetadata<IntervalModel>)
 SCORE_COMMAND_DECL_T(SetExtendedMetadata<EventModel>)
-SCORE_COMMAND_DECL_T(SetExtendedMetadata<TimeSyncModel>)
+SCORE_COMMAND_DECL_T(SetExtendedMetadata<SynchronizationModel>)
 SCORE_COMMAND_DECL_T(SetExtendedMetadata<StateModel>)
 SCORE_COMMAND_DECL_T(SetExtendedMetadata<Process::ProcessModel>)

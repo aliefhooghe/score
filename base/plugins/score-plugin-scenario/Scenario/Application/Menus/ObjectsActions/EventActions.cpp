@@ -5,12 +5,12 @@
 #include <Scenario/Application/ScenarioApplicationPlugin.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 
-#include <Scenario/Commands/TimeSync/AddTrigger.hpp>
-#include <Scenario/Commands/TimeSync/RemoveTrigger.hpp>
-#include <Scenario/Commands/TimeSync/TriggerCommandFactory/TriggerCommandFactoryList.hpp>
+#include <Scenario/Commands/Synchronization/AddTrigger.hpp>
+#include <Scenario/Commands/Synchronization/RemoveTrigger.hpp>
+#include <Scenario/Commands/Synchronization/TriggerCommandFactory/TriggerCommandFactoryList.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/ScenarioDocument/ScenarioDocumentModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 
 #include <core/document/Document.hpp>
 #include <score/actions/ActionManager.hpp>
@@ -38,7 +38,7 @@ EventActions::EventActions(ScenarioApplicationPlugin* parent)
   m_addTrigger = new QAction{tr("Enable trigger"), this};
   connect(
       m_addTrigger, &QAction::triggered, this,
-      &EventActions::addTriggerToTimeSync);
+      &EventActions::addTriggerToSynchronization);
   m_addTrigger->setEnabled(false);
 
   m_addTrigger->setToolTip(tr("Enable trigger"));
@@ -48,7 +48,7 @@ EventActions::EventActions(ScenarioApplicationPlugin* parent)
   m_removeTrigger = new QAction{tr("Disable trigger"), this};
   connect(
       m_removeTrigger, &QAction::triggered, this,
-      &EventActions::removeTriggerFromTimeSync);
+      &EventActions::removeTriggerFromSynchronization);
   m_removeTrigger->setEnabled(false);
 
   /// Add Condition ///
@@ -126,15 +126,15 @@ void EventActions::setupContextMenu(Process::LayerContextMenuManager& ctxm)
   ctxm.insert(std::move(cm));
 }
 
-void EventActions::addTriggerToTimeSync()
+void EventActions::addTriggerToSynchronization()
 {
   auto si = focusedScenarioInterface(m_parent->currentDocument()->context());
   if(!si)
     return;
 
-  auto selectedTimeSyncs = selectedElements(si->getTimeSyncs());
+  auto selectedSynchronizations = selectedElements(si->getSynchronizations());
 
-  if (selectedTimeSyncs.isEmpty())
+  if (selectedSynchronizations.isEmpty())
   {
     // take tn from a selected event
     auto selectedEvents = selectedElements(si->getEvents());
@@ -143,8 +143,8 @@ void EventActions::addTriggerToTimeSync()
       auto selectedStates = selectedElements(si->getStates());
       if(!selectedStates.empty())
       {
-        auto& tn = Scenario::parentTimeSync(*selectedStates.first(), *si);
-        selectedTimeSyncs.append(&tn);
+        auto& tn = Scenario::parentSynchronization(*selectedStates.first(), *si);
+        selectedSynchronizations.append(&tn);
       }
       else
       {
@@ -154,16 +154,16 @@ void EventActions::addTriggerToTimeSync()
     else
     {
       auto ev = selectedEvents.first();
-      auto& tn = Scenario::parentTimeSync(*ev, *si);
-      selectedTimeSyncs.append(&tn);
+      auto& tn = Scenario::parentSynchronization(*ev, *si);
+      selectedSynchronizations.append(&tn);
     }
   }
 
-  selectedTimeSyncs = selectedTimeSyncs.toSet().toList();
+  selectedSynchronizations = selectedSynchronizations.toSet().toList();
 
   auto cmd = m_triggerCommandFactory.make(
       &Scenario::Command::TriggerCommandFactory::make_addTriggerCommand,
-      **selectedTimeSyncs.begin());
+      **selectedSynchronizations.begin());
 
   if (cmd)
     emit dispatcher().submitCommand(cmd);
@@ -227,24 +227,24 @@ void EventActions::removeCondition()
   }
 }
 
-void EventActions::removeTriggerFromTimeSync()
+void EventActions::removeTriggerFromSynchronization()
 {
   auto si = focusedScenarioInterface(m_parent->currentDocument()->context());
-  auto selectedTimeSyncs = selectedElements(si->getTimeSyncs());
-  if (selectedTimeSyncs.isEmpty())
+  auto selectedSynchronizations = selectedElements(si->getSynchronizations());
+  if (selectedSynchronizations.isEmpty())
   {
     auto selectedEvents = selectedElements(si->getEvents());
     SCORE_ASSERT(!selectedEvents.empty());
     // TODO maybe states, etc... ?
 
     auto ev = selectedEvents.first();
-    auto& tn = Scenario::parentTimeSync(*ev, *si);
-    selectedTimeSyncs.append(&tn);
+    auto& tn = Scenario::parentSynchronization(*ev, *si);
+    selectedSynchronizations.append(&tn);
   }
 
   auto cmd = m_triggerCommandFactory.make(
       &Scenario::Command::TriggerCommandFactory::make_removeTriggerCommand,
-      **selectedTimeSyncs.begin());
+      **selectedSynchronizations.begin());
 
   if (cmd)
     emit dispatcher().submitCommand(cmd);

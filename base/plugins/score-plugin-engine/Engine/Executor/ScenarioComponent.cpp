@@ -22,12 +22,12 @@
 #include <Engine/Executor/EventComponent.hpp>
 #include <Engine/Executor/ProcessComponent.hpp>
 #include <Engine/Executor/StateComponent.hpp>
-#include <Engine/Executor/TimeSyncComponent.hpp>
+#include <Engine/Executor/SynchronizationComponent.hpp>
 #include <Scenario/Document/Interval/IntervalDurations.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/Event/ExecutionStatus.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 
 #include <Scenario/ExecutionChecker/CSPCoherencyCheckerInterface.hpp>
@@ -99,7 +99,7 @@ void ScenarioComponent::init()
     m_checker = fact->make(process(), ctx.doc.app, m_properties);
     if (m_checker)
     {
-      m_properties.timesyncs[Id<Scenario::TimeSyncModel>(0)].date = 0;
+      m_properties.timesyncs[Id<Scenario::SynchronizationModel>(0)].date = 0;
       m_checker->computeDisplacement(m_pastTn, m_properties);
     }
   }
@@ -153,14 +153,14 @@ std::function<void ()> ScenarioComponentBase::removing(
 }
 
 std::function<void ()> ScenarioComponentBase::removing(
-    const Scenario::TimeSyncModel& e, TimeSyncComponent& c)
+    const Scenario::SynchronizationModel& e, SynchronizationComponent& c)
 {
   // FIXME this will certainly break stuff WRT member variables, coherency checker, etc.
   auto it = m_ossia_timesyncs.find(e.id());
   if(it != m_ossia_timesyncs.end())
   {
     std::shared_ptr<ossia::scenario> proc = std::dynamic_pointer_cast<ossia::scenario>(m_ossia_process);
-    m_ctx.executionQueue.enqueue([proc,tn=c.OSSIATimeSync()] {
+    m_ctx.executionQueue.enqueue([proc,tn=c.OSSIASynchronization()] {
       tn->cleanup();
       proc->remove_time_sync(tn);
     });
@@ -286,20 +286,20 @@ EventComponent* ScenarioComponentBase::make<EventComponent, Scenario::EventModel
 
   // Find the parent time sync for the new event
   auto& nodes = m_ossia_timesyncs;
-  SCORE_ASSERT(nodes.find(ev.timeSync()) != nodes.end());
-  auto tn = nodes.at(ev.timeSync());
+  SCORE_ASSERT(nodes.find(ev.synchronization()) != nodes.end());
+  auto tn = nodes.at(ev.synchronization());
 
   // Create the event
   auto ossia_ev = std::make_shared<ossia::time_event>(
         [=](ossia::time_event::status st) { return eventCallback(*elt, st); },
-        *tn->OSSIATimeSync(),
+        *tn->OSSIASynchronization(),
         ossia::expression_ptr{});
 
   elt->onSetup(ossia_ev, elt->makeExpression(), (ossia::time_event::offset_behavior) (ev.offsetBehavior()));
 
   // The event is inserted in the API edition thread
   m_ctx.executionQueue.enqueue(
-        [event=ossia_ev,time_sync=tn->OSSIATimeSync()]
+        [event=ossia_ev,time_sync=tn->OSSIASynchronization()]
   {
     SCORE_ASSERT(event);
     SCORE_ASSERT(time_sync);
@@ -310,18 +310,18 @@ EventComponent* ScenarioComponentBase::make<EventComponent, Scenario::EventModel
 }
 
 template<>
-TimeSyncComponent* ScenarioComponentBase::make<TimeSyncComponent, Scenario::TimeSyncModel>(
+SynchronizationComponent* ScenarioComponentBase::make<SynchronizationComponent, Scenario::SynchronizationModel>(
     const Id<score::Component>& id,
-    Scenario::TimeSyncModel& tn)
+    Scenario::SynchronizationModel& tn)
 {
   // Create the object
-  auto elt = std::make_shared<TimeSyncComponent>(tn, m_ctx, id, this);
+  auto elt = std::make_shared<SynchronizationComponent>(tn, m_ctx, id, this);
   m_ossia_timesyncs.insert({tn.id(), elt});
 
   bool must_add = false;
   // The OSSIA API already creates the start time sync so we must use it if available
   std::shared_ptr<ossia::time_sync> ossia_tn;
-  if (tn.id() ==  Scenario::startId<Scenario::TimeSyncModel>())
+  if (tn.id() ==  Scenario::startId<Scenario::SynchronizationModel>())
   {
     ossia_tn = OSSIAProcess().get_start_time_sync();
   }
@@ -337,7 +337,7 @@ TimeSyncComponent* ScenarioComponentBase::make<TimeSyncComponent, Scenario::Time
   // What happens when a time sync's status change
   ossia_tn->triggered.add_callback([thisP=shared_from_this(),elt] {
     auto& sub = static_cast<ScenarioComponentBase&>(*thisP);
-    return sub.timeSyncCallback(
+    return sub.synchronizationCallback(
           elt.get(), sub.m_parent_interval.OSSIAInterval()->get_date());
   });
 
@@ -439,15 +439,15 @@ void ScenarioComponentBase::eventCallback(
   }
 }
 
-void ScenarioComponentBase::timeSyncCallback(
-    TimeSyncComponent* tn, ossia::time_value date)
+void ScenarioComponentBase::synchronizationCallback(
+    SynchronizationComponent* tn, ossia::time_value date)
 {
   if (m_checker)
   {
-    m_pastTn.push_back(tn->scoreTimeSync().id());
+    m_pastTn.push_back(tn->scoreSynchronization().id());
 
     // Fix Timenode
-    auto& curTnProp = m_properties.timesyncs[tn->scoreTimeSync().id()];
+    auto& curTnProp = m_properties.timesyncs[tn->scoreSynchronization().id()];
     curTnProp.date = double(date);
     curTnProp.date_max = curTnProp.date;
     curTnProp.date_min = curTnProp.date;
@@ -455,12 +455,12 @@ void ScenarioComponentBase::timeSyncCallback(
 
     // Fix previous intervals
     auto previousCstrs
-        = Scenario::previousIntervals(tn->scoreTimeSync(), process());
+        = Scenario::previousIntervals(tn->scoreSynchronization(), process());
 
     for (auto& cstrId : previousCstrs)
     {
       auto& startTn
-          = Scenario::startTimeSync(process().interval(cstrId), process());
+          = Scenario::startSynchronization(process().interval(cstrId), process());
       auto& cstrProp = m_properties.intervals[cstrId];
 
       cstrProp.newMin.setMSecs(

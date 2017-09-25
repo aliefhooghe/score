@@ -6,11 +6,11 @@
 #include <Scenario/Commands/Scenario/Deletions/ClearInterval.hpp>
 #include <Scenario/Commands/Scenario/Deletions/ClearState.hpp>
 #include <Scenario/Commands/Scenario/Deletions/RemoveSelection.hpp>
-#include <Scenario/Commands/Scenario/Merge/MergeTimeSyncs.hpp>
+#include <Scenario/Commands/Scenario/Merge/MergeSynchronizations.hpp>
 #include <Scenario/Document/BaseScenario/BaseScenario.hpp>
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <Scenario/Document/State/ItemModel/MessageItemModel.hpp>
@@ -189,12 +189,12 @@ auto make_ordered(const Scenario::ProcessModel& scenario)
   return the_set;
 }
 
-void mergeTimeSyncs(
+void mergeSynchronizations(
     const Scenario::ProcessModel& scenario,
     const score::CommandStackFacade& f)
 {
   // We merge all the furthest timesyncs to the first one.
-  auto timesyncs = make_ordered<TimeSyncModel>(scenario);
+  auto timesyncs = make_ordered<SynchronizationModel>(scenario);
   auto states = make_ordered<StateModel>(scenario);
   auto events = make_ordered<EventModel>(scenario);
 
@@ -203,10 +203,10 @@ void mergeTimeSyncs(
     if (states.size() == 2)
     {
       auto it = states.begin();
-      auto& first = Scenario::parentTimeSync(**it, scenario);
-      auto& second = Scenario::parentTimeSync(**(++it), scenario);
+      auto& first = Scenario::parentSynchronization(**it, scenario);
+      auto& second = Scenario::parentSynchronization(**(++it), scenario);
 
-      auto cmd = new Command::MergeTimeSyncs(
+      auto cmd = new Command::MergeSynchronizations(
           scenario, second.id(), first.id());
       f.redoAndPush(cmd);
     }
@@ -217,7 +217,7 @@ void mergeTimeSyncs(
     auto first_tn = (*it)->id();
     for (++it; it != timesyncs.end(); ++it)
     {
-      auto cmd = new Command::MergeTimeSyncs(
+      auto cmd = new Command::MergeSynchronizations(
           scenario, first_tn, (*it)->id());
       f.redoAndPush(cmd);
     }

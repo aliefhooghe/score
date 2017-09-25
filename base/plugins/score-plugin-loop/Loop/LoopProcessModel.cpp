@@ -3,7 +3,7 @@
 
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <algorithm>
 #include <score/tools/std/Optional.hpp>
 #include <qnamespace.h>
@@ -37,7 +37,7 @@ ProcessModel::ProcessModel(
   Scenario::IntervalDurations::Algorithms::changeAllDurations(
       interval(), duration);
   endEvent().setDate(duration);
-  endTimeSync().setDate(duration);
+  endSynchronization().setDate(duration);
 
   const double height = 0.5;
   interval().setHeightPercentage(height);
@@ -46,8 +46,8 @@ ProcessModel::ProcessModel(
   BaseScenarioContainer::endState().setHeightPercentage(height);
   BaseScenarioContainer::startEvent().setExtent({height, 0.2});
   BaseScenarioContainer::endEvent().setExtent({height, 0.2});
-  BaseScenarioContainer::startTimeSync().setExtent({height, 1});
-  BaseScenarioContainer::endTimeSync().setExtent({height, 1});
+  BaseScenarioContainer::startSynchronization().setExtent({height, 1});
+  BaseScenarioContainer::endSynchronization().setExtent({height, 1});
 
   metadata().setInstanceName(*this);
 }
@@ -112,10 +112,10 @@ void ProcessModel::setSelection(const Selection& s) const
   });
 }
 
-const QVector<Id<Scenario::IntervalModel>> intervalsBeforeTimeSync(
-    const ProcessModel& scen, const Id<Scenario::TimeSyncModel>& timeSyncId)
+const QVector<Id<Scenario::IntervalModel>> intervalsBeforeSynchronization(
+    const ProcessModel& scen, const Id<Scenario::SynchronizationModel>& synchronizationId)
 {
-  if (timeSyncId == scen.endTimeSync().id())
+  if (synchronizationId == scen.endSynchronization().id())
   {
     return {scen.interval().id()};
   }

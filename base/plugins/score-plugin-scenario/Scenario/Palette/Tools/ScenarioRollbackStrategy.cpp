@@ -3,7 +3,7 @@
 #include <Scenario/Commands/Scenario/Creations/CreateInterval.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateInterval_State.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event.hpp>
-#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_TimeSync.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_Synchronization.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateEvent_State.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateSequence.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateState.hpp>
@@ -26,7 +26,7 @@ void ScenarioRollbackStrategy::rollback(
         || cmds[i]->key() == CreateEvent_State::static_key()
         || cmds[i]->key() == CreateInterval_State::static_key()
         || cmds[i]->key() == CreateInterval_State_Event::static_key()
-        || cmds[i]->key() == CreateInterval_State_Event_TimeSync::static_key()
+        || cmds[i]->key() == CreateInterval_State_Event_Synchronization::static_key()
         || cmds[i]->key() == CreateSequence::static_key())
     {
       cmds[i]->undo(ctx);

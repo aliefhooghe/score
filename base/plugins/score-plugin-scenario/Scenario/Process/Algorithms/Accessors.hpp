@@ -2,7 +2,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 
 // Intervals
 namespace Scenario
@@ -34,25 +34,25 @@ endEvent(const IntervalModel& cst, const Scenario_T& scenario)
 }
 
 template <typename Scenario_T>
-const TimeSyncModel&
-startTimeSync(const IntervalModel& cst, const Scenario_T& scenario)
+const SynchronizationModel&
+startSynchronization(const IntervalModel& cst, const Scenario_T& scenario)
 {
-  return scenario.timeSync(startEvent(cst, scenario).timeSync());
+  return scenario.synchronization(startEvent(cst, scenario).synchronization());
 }
 
 template <typename Scenario_T>
-const TimeSyncModel&
-endTimeSync(const IntervalModel& cst, const Scenario_T& scenario)
+const SynchronizationModel&
+endSynchronization(const IntervalModel& cst, const Scenario_T& scenario)
 {
-  return scenario.timeSync(endEvent(cst, scenario).timeSync());
+  return scenario.synchronization(endEvent(cst, scenario).synchronization());
 }
 
 // Events
 template <typename Scenario_T>
-const TimeSyncModel&
-parentTimeSync(const EventModel& ev, const Scenario_T& scenario)
+const SynchronizationModel&
+parentSynchronization(const EventModel& ev, const Scenario_T& scenario)
 {
-  return scenario.timeSync(ev.timeSync());
+  return scenario.synchronization(ev.synchronization());
 }
 
 // States
@@ -63,15 +63,15 @@ const EventModel& parentEvent(const StateModel& st, const Scenario_T& scenario)
 }
 
 template <typename Scenario_T>
-const TimeSyncModel&
-parentTimeSync(const StateModel& st, const Scenario_T& scenario)
+const SynchronizationModel&
+parentSynchronization(const StateModel& st, const Scenario_T& scenario)
 {
-  return parentTimeSync(parentEvent(st, scenario), scenario);
+  return parentSynchronization(parentEvent(st, scenario), scenario);
 }
 
 // This one is just here to allow generic facilities
 template <typename Scenario_T>
-const TimeSyncModel& parentTimeSync(const TimeSyncModel& st, const Scenario_T&)
+const SynchronizationModel& parentSynchronization(const SynchronizationModel& st, const Scenario_T&)
 {
   return st;
 }
@@ -117,9 +117,9 @@ std::list<Id<IntervalModel>> previousIntervals(const EventModel& ev, const Scena
   return intervals;
 }
 
-// TimeSyncs
+// Synchronizations
 template <typename Scenario_T>
-std::list<Id<IntervalModel>> nextIntervals(const TimeSyncModel& tn, const Scenario_T& scenario)
+std::list<Id<IntervalModel>> nextIntervals(const SynchronizationModel& tn, const Scenario_T& scenario)
 {
   std::list<Id<IntervalModel>> intervals;
   for (const Id<EventModel>& event_id : tn.events())
@@ -133,7 +133,7 @@ std::list<Id<IntervalModel>> nextIntervals(const TimeSyncModel& tn, const Scenar
 }
 
 template <typename Scenario_T>
-std::list<Id<IntervalModel>> previousIntervals(const TimeSyncModel& tn, const Scenario_T& scenario)
+std::list<Id<IntervalModel>> previousIntervals(const SynchronizationModel& tn, const Scenario_T& scenario)
 {
   std::list<Id<IntervalModel>> intervals;
   for (const Id<EventModel>& event_id : tn.events())
@@ -147,7 +147,7 @@ std::list<Id<IntervalModel>> previousIntervals(const TimeSyncModel& tn, const Sc
 }
 
 template <typename Scenario_T>
-std::list<Id<StateModel>> states(const TimeSyncModel& tn, const Scenario_T& scenario)
+std::list<Id<StateModel>> states(const SynchronizationModel& tn, const Scenario_T& scenario)
 {
   std::list<Id<StateModel>> stateList;
   for (const Id<EventModel>& event_id : tn.events())
@@ -164,7 +164,7 @@ std::list<Id<StateModel>> states(const TimeSyncModel& tn, const Scenario_T& scen
 template <typename Element_T, typename Scenario_T>
 const auto& date(const Element_T& e, const Scenario_T& scenario)
 {
-  return parentTimeSync(e, scenario).date();
+  return parentSynchronization(e, scenario).date();
 }
 
 template <typename Element_T>

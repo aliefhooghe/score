@@ -4,7 +4,7 @@
 namespace Scenario
 {
 class EventPresenter;
-class TimeSyncPresenter;
+class SynchronizationPresenter;
 class TemporalIntervalPresenter;
 class StatePresenter;
 }
@@ -20,7 +20,7 @@ public:
 
   void updateInterval(const Scenario::TemporalIntervalPresenter& pres);
 
-  void updateTimeSync(const Scenario::TimeSyncPresenter& timesync);
+  void updateSynchronization(const Scenario::SynchronizationPresenter& timesync);
 
   void updateState(const Scenario::StatePresenter& state);
 

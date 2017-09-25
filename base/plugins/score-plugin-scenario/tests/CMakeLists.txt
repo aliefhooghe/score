@@ -27,18 +27,18 @@ addIScoreQtTest(AddSlotToRackTest
                                                                 "${CMAKE_CURRENT_SOURCE_DIR}/Commands/AddSlotToRackTest.cpp")
 addIScoreQtTest(AddLayerModelToSlotTest
                                                                 "${CMAKE_CURRENT_SOURCE_DIR}/Commands/AddLayerModelToSlotTest.cpp")
-addIscoreQtTest(SplitTimeSyncTest
-                                                                "${CMAKE_CURRENT_SOURCE_DIR}/Commands/SplitTimeSyncTest.cpp")
-addIscoreQtTest(MergeTimeSyncsTest
-                                                                "${CMAKE_CURRENT_SOURCE_DIR}/Commands/MergeTimeSyncsTest.cpp")
+addIscoreQtTest(SplitSynchronizationTest
+                                                                "${CMAKE_CURRENT_SOURCE_DIR}/Commands/SplitSynchronizationTest.cpp")
+addIscoreQtTest(MergeSynchronizationsTest
+                                                                "${CMAKE_CURRENT_SOURCE_DIR}/Commands/MergeSynchronizationsTest.cpp")
 
 ## elementCreation
 addIScoreQtTest(CreateEventAfterEventTest
                                                                 "${CMAKE_CURRENT_SOURCE_DIR}/Commands/ElementCreation/CreateEventAfterEventTest.cpp")
 addIScoreQtTest(CreateEventTest
                                                                 "${CMAKE_CURRENT_SOURCE_DIR}/Commands/ElementCreation/CreateEventTest.cpp")
-addIScoreQtTest(CreateEventAfterEventOnTimeSyncTest
-                                                                "${CMAKE_CURRENT_SOURCE_DIR}/Commands/ElementCreation/CreateEventAfterEventOnTimeSyncTest.cpp")
+addIScoreQtTest(CreateEventAfterEventOnSynchronizationTest
+                                                                "${CMAKE_CURRENT_SOURCE_DIR}/Commands/ElementCreation/CreateEventAfterEventOnSynchronizationTest.cpp")
 addIScoreQtTest(CreateIntervalTest
                                                                 "${CMAKE_CURRENT_SOURCE_DIR}/Commands/ElementCreation/CreateIntervalTest.cpp")
 
@@ -73,7 +73,7 @@ addIScoreQtTest(ResizeSlotVerticallyTest
 addIScoreQtTest(IntervalModelTest
                                                                 "${CMAKE_CURRENT_SOURCE_DIR}/Interval/IntervalModelTests.cpp")
 
-## TimeSyncs
-addIScoreQtTest(TimeSyncModelTest
-                                                                "${CMAKE_CURRENT_SOURCE_DIR}/TimeSync/TimeSyncModelTests.cpp")
+## Synchronizations
+addIScoreQtTest(SynchronizationModelTest
+                                                                "${CMAKE_CURRENT_SOURCE_DIR}/Synchronization/SynchronizationModelTests.cpp")
 

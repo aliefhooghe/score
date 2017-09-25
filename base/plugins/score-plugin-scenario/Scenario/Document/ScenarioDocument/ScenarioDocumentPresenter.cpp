@@ -579,8 +579,8 @@ void ScenarioDocumentPresenter::setNewSelection(const Selection& s)
   }
   else if (ossia::any_of(s, [&](const QObject* obj) {
              return obj == &displayedElements.interval()
-                    || obj == &displayedElements.startTimeSync()
-                    || obj == &displayedElements.endTimeSync()
+                    || obj == &displayedElements.startSynchronization()
+                    || obj == &displayedElements.endSynchronization()
                     || obj == &displayedElements.startEvent()
                     || obj == &displayedElements.endEvent()
                     || obj == &displayedElements.startState()

@@ -13,7 +13,7 @@
 #include <Inspector/InspectorWidgetFactoryInterface.hpp>
 #include <Loop/LoopDisplayedElements.hpp>
 #include <Process/ProcessFactory.hpp>
-#include <Scenario/Commands/TimeSync/TriggerCommandFactory/TriggerCommandFactory.hpp>
+#include <Scenario/Commands/Synchronization/TriggerCommandFactory/TriggerCommandFactory.hpp>
 #include <Scenario/Inspector/Interval/IntervalInspectorDelegateFactory.hpp>
 #include <Loop/Palette/LoopToolPalette.hpp>
 #include <score/plugins/customfactory/StringFactoryKey.hpp>

@@ -5,7 +5,7 @@
 #include <Scenario/Document/Interval/FullView/FullViewIntervalPresenter.hpp>
 #include <Scenario/Document/Event/EventPresenter.hpp>
 #include <Scenario/Document/State/StatePresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
 namespace Loop
 {
 bool DisplayedElementsProvider::matches(
@@ -26,8 +26,8 @@ DisplayedElementsProvider::make(Scenario::IntervalModel& cst) const
                                                 parent_base->startEvent(),
                                                 parent_base->endEvent(),
 
-                                                parent_base->startTimeSync(),
-                                                parent_base->endTimeSync()};
+                                                parent_base->startSynchronization(),
+                                                parent_base->endSynchronization()};
   }
 
   return {};
@@ -47,9 +47,9 @@ DisplayedElementsProvider::make_presenters(
         new Scenario::StatePresenter{bs->endState(), view_parent, parent},
         new Scenario::EventPresenter{bs->startEvent(), view_parent, parent},
         new Scenario::EventPresenter{bs->endEvent(), view_parent, parent},
-        new Scenario::TimeSyncPresenter{bs->startTimeSync(), view_parent,
+        new Scenario::SynchronizationPresenter{bs->startSynchronization(), view_parent,
                                         parent},
-        new Scenario::TimeSyncPresenter{bs->endTimeSync(), view_parent,
+        new Scenario::SynchronizationPresenter{bs->endSynchronization(), view_parent,
                                         parent}};
   }
   return {};

@@ -17,7 +17,7 @@
 #include <Scenario/Document/ScenarioDocument/ScenarioDocumentModel.hpp>
 #include <Scenario/Document/State/ItemModel/MessageItemModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 

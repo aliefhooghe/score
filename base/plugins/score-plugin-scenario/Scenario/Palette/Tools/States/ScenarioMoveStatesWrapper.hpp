@@ -9,7 +9,7 @@
 #include <Scenario/Palette/Transitions/IntervalTransitions.hpp>
 #include <Scenario/Palette/Transitions/EventTransitions.hpp>
 #include <Scenario/Palette/Transitions/StateTransitions.hpp>
-#include <Scenario/Palette/Transitions/TimeSyncTransitions.hpp>
+#include <Scenario/Palette/Transitions/SynchronizationTransitions.hpp>
 namespace Scenario
 {
 class MoveIntervalInScenario_StateWrapper
@@ -88,22 +88,22 @@ public:
   }
 };
 
-class MoveTimeSyncInScenario_StateWrapper
+class MoveSynchronizationInScenario_StateWrapper
 {
 public:
   template <typename Scenario_T, typename ToolPalette_T>
   static void
   make(const ToolPalette_T& palette, QState* waitState, QState& parent)
   {
-    /// TimeSync
-    auto moveTimeSync
-        = new MoveTimeSyncState<Scenario::Command::MoveEventMeta, Scenario_T, ToolPalette_T>{
+    /// Synchronization
+    auto moveSynchronization
+        = new MoveSynchronizationState<Scenario::Command::MoveEventMeta, Scenario_T, ToolPalette_T>{
             palette, palette.model(), palette.context().context.commandStack,
             palette.context().context.objectLocker, &parent};
 
-    score::make_transition<ClickOnTimeSync_Transition<Scenario_T>>(
-        waitState, moveTimeSync, *moveTimeSync);
-    moveTimeSync->addTransition(moveTimeSync, finishedState(), waitState);
+    score::make_transition<ClickOnSynchronization_Transition<Scenario_T>>(
+        waitState, moveSynchronization, *moveSynchronization);
+    moveSynchronization->addTransition(moveSynchronization, finishedState(), waitState);
   }
 };
 
@@ -129,22 +129,22 @@ public:
   }
 };
 
-class MoveTimeSyncInTopScenario_StateWrapper
+class MoveSynchronizationInTopScenario_StateWrapper
 {
 public:
   template <typename Scenario_T, typename ToolPalette_T>
   static void
   make(const ToolPalette_T& palette, QState* waitState, QState& parent)
   {
-    /// TimeSync
-    auto moveTimeSync
-        = new MoveTimeSyncState<Scenario::Command::MoveTopEventMeta, Scenario_T, ToolPalette_T>{
+    /// Synchronization
+    auto moveSynchronization
+        = new MoveSynchronizationState<Scenario::Command::MoveTopEventMeta, Scenario_T, ToolPalette_T>{
             palette, palette.model(), palette.context().context.commandStack,
             palette.context().context.objectLocker, &parent};
 
-    score::make_transition<ClickOnTimeSync_Transition<Scenario_T>>(
-        waitState, moveTimeSync, *moveTimeSync);
-    moveTimeSync->addTransition(moveTimeSync, finishedState(), waitState);
+    score::make_transition<ClickOnSynchronization_Transition<Scenario_T>>(
+        waitState, moveSynchronization, *moveSynchronization);
+    moveSynchronization->addTransition(moveSynchronization, finishedState(), waitState);
   }
 };
 }

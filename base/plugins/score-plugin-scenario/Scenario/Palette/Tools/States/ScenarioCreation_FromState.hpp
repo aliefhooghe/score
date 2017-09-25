@@ -1,7 +1,7 @@
 #pragma once
 #include "ScenarioCreationState.hpp"
 
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 
 #include <Scenario/Commands/Scenario/Creations/CreateState.hpp>
 #include <Scenario/Commands/Scenario/Displacement/MoveNewEvent.hpp>
@@ -15,7 +15,7 @@
 #include <Scenario/Palette/Transitions/EventTransitions.hpp>
 #include <Scenario/Palette/Transitions/NothingTransitions.hpp>
 #include <Scenario/Palette/Transitions/StateTransitions.hpp>
-#include <Scenario/Palette/Transitions/TimeSyncTransitions.hpp>
+#include <Scenario/Palette/Transitions/SynchronizationTransitions.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 
 #include <QApplication>
@@ -49,7 +49,7 @@ public:
       auto move_nothing = new StrongQState<MoveOnNothing>{mainState};
       auto move_state = new StrongQState<MoveOnState>{mainState};
       auto move_event = new StrongQState<MoveOnEvent>{mainState};
-      auto move_timesync = new StrongQState<MoveOnTimeSync>{mainState};
+      auto move_timesync = new StrongQState<MoveOnSynchronization>{mainState};
 
       // General setup
       mainState->setInitialState(pressed);
@@ -82,10 +82,10 @@ public:
         createToEvent();
       });
 
-      // MoveOnNothing -> MoveOnTimeSync
+      // MoveOnNothing -> MoveOnSynchronization
       this->add_transition(move_nothing, move_timesync, [&]() {
         this->rollback();
-        createToTimeSync();
+        createToSynchronization();
       });
 
       /// MoveOnState -> ...
@@ -104,10 +104,10 @@ public:
         createToEvent();
       });
 
-      // MoveOnState -> MoveOnTimeSync
+      // MoveOnState -> MoveOnSynchronization
       this->add_transition(move_state, move_timesync, [&]() {
         this->rollback();
-        createToTimeSync();
+        createToSynchronization();
       });
 
       /// MoveOnEvent -> ...
@@ -135,33 +135,33 @@ public:
       score::make_transition<MoveOnEvent_Transition<Scenario_T>>(
           move_event, move_event, *this);
 
-      // MoveOnEvent -> MoveOnTimeSync
+      // MoveOnEvent -> MoveOnSynchronization
       this->add_transition(move_event, move_timesync, [&]() {
         this->rollback();
-        createToTimeSync();
+        createToSynchronization();
       });
 
-      /// MoveOnTimeSync -> ...
-      // MoveOnTimeSync -> MoveOnNothing
+      /// MoveOnSynchronization -> ...
+      // MoveOnSynchronization -> MoveOnNothing
       this->add_transition(move_timesync, move_nothing, [&]() {
         this->rollback();
         createToNothing();
       });
 
-      // MoveOnTimeSync -> MoveOnState
+      // MoveOnSynchronization -> MoveOnState
       this->add_transition(move_timesync, move_state, [&]() {
         this->rollback();
         createToState();
       });
 
-      // MoveOnTimeSync -> MoveOnEvent
+      // MoveOnSynchronization -> MoveOnEvent
       this->add_transition(move_timesync, move_event, [&]() {
         this->rollback();
         createToEvent();
       });
 
-      // MoveOnTimeSync -> MoveOnTimeSync
-      score::make_transition<MoveOnTimeSync_Transition<Scenario_T>>(
+      // MoveOnSynchronization -> MoveOnSynchronization
+      score::make_transition<MoveOnSynchronization_Transition<Scenario_T>>(
           move_timesync, move_timesync, *this);
 
       // What happens in each state.
@@ -297,7 +297,7 @@ private:
     if(new_event && !sequence)
     {
       // Create new event on the timesync
-      auto tn = Scenario::parentEvent(st, scenar).timeSync();
+      auto tn = Scenario::parentEvent(st, scenar).synchronization();
       auto cmd = new Scenario::Command::CreateEvent_State{
           this->m_scenario, tn, this->currentPoint.y};
       this->m_dispatcher.submitCommand(cmd);
@@ -348,10 +348,10 @@ private:
         [&](const Id<StateModel>& id) { this->createToNothing_base(id); });
   }
 
-  void createToTimeSync()
+  void createToSynchronization()
   {
     creationCheck(
-        [&](const Id<StateModel>& id) { this->createToTimeSync_base(id); });
+        [&](const Id<StateModel>& id) { this->createToSynchronization_base(id); });
   }
 
   void createToEvent()

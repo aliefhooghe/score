@@ -77,7 +77,7 @@ void EnableWhenScenarioModelObject::action(
            || bool(dynamic_cast<const Scenario::EventModel*>(ptr))
            || bool(dynamic_cast<const Scenario::StateModel*>(ptr))
            || bool(dynamic_cast<const Scenario::CommentBlockModel*>(ptr))
-           || bool(dynamic_cast<const Scenario::TimeSyncModel*>(ptr));
+           || bool(dynamic_cast<const Scenario::SynchronizationModel*>(ptr));
   });
 
   setEnabled(mgr, res);
@@ -107,7 +107,7 @@ void EnableWhenScenarioInterfaceInstantObject::action(
   const auto& sel = doc->selectionStack.currentSelection();
   auto res = ossia::any_of(sel, [](auto obj) {
     auto ptr = obj.data();
-    return bool(dynamic_cast<const Scenario::TimeSyncModel*>(ptr))
+    return bool(dynamic_cast<const Scenario::SynchronizationModel*>(ptr))
            || bool(dynamic_cast<const Scenario::EventModel*>(ptr))
            || bool(dynamic_cast<const Scenario::StateModel*>(ptr));
   });

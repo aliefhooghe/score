@@ -5,27 +5,27 @@
 #include <Scenario/Palette/Transitions/EventTransitions.hpp>
 #include <Scenario/Palette/Transitions/NothingTransitions.hpp>
 #include <Scenario/Palette/Transitions/StateTransitions.hpp>
-#include <Scenario/Palette/Transitions/TimeSyncTransitions.hpp>
+#include <Scenario/Palette/Transitions/SynchronizationTransitions.hpp>
 
 #include <Scenario/Palette/Tools/States/ScenarioCreation_FromEvent.hpp>
 #include <Scenario/Palette/Tools/States/ScenarioCreation_FromNothing.hpp>
 #include <Scenario/Palette/Tools/States/ScenarioCreation_FromState.hpp>
-#include <Scenario/Palette/Tools/States/ScenarioCreation_FromTimeSync.hpp>
+#include <Scenario/Palette/Tools/States/ScenarioCreation_FromSynchronization.hpp>
 
 #include <Scenario/Palette/Tools/ScenarioToolState.hpp>
 
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/Event/EventPresenter.hpp>
 #include <Scenario/Document/Event/EventView.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncView.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationView.hpp>
 
 #include <score/document/DocumentInterface.hpp>
 #include <score/statemachine/StateMachineTools.hpp>
 
 class EventPresenter;
-class TimeSyncPresenter;
+class SynchronizationPresenter;
 namespace Scenario
 {
 
@@ -65,17 +65,17 @@ public:
     this->localSM().addState(m_createFromEventState);
 
     //// Create from a timesync ////
-    m_createFromTimeSyncState
-        = new Creation_FromTimeSync<Scenario_T, ToolPalette_T>{
+    m_createFromSynchronizationState
+        = new Creation_FromSynchronization<Scenario_T, ToolPalette_T>{
             this->m_palette, this->m_palette.model(),
             this->m_palette.context().context.commandStack, nullptr};
 
-    score::make_transition<ClickOnTimeSync_Transition<Scenario_T>>(
-        m_waitState, m_createFromTimeSyncState, *m_createFromTimeSyncState);
-    m_createFromTimeSyncState->addTransition(
-        m_createFromTimeSyncState, finishedState(), m_waitState);
+    score::make_transition<ClickOnSynchronization_Transition<Scenario_T>>(
+        m_waitState, m_createFromSynchronizationState, *m_createFromSynchronizationState);
+    m_createFromSynchronizationState->addTransition(
+        m_createFromSynchronizationState, finishedState(), m_waitState);
 
-    this->localSM().addState(m_createFromTimeSyncState);
+    this->localSM().addState(m_createFromSynchronizationState);
 
     //// Create from a State ////
     m_createFromStateState = new Creation_FromState<Scenario_T, ToolPalette_T>{
@@ -108,9 +108,9 @@ public:
           this->localSM().postEvent(new ClickOnEvent_Event{id, sp});
         },
 
-        // Press a TimeSync
-        [&](const Id<TimeSyncModel>& id) {
-          this->localSM().postEvent(new ClickOnTimeSync_Event{id, sp});
+        // Press a Synchronization
+        [&](const Id<SynchronizationModel>& id) {
+          this->localSM().postEvent(new ClickOnSynchronization_Event{id, sp});
         },
 
         // Press a Interval
@@ -155,13 +155,13 @@ public:
           [&](const Id<EventModel>& id) {
             this->localSM().postEvent(new MoveOnEvent_Event{id, sp});
           },
-          [&](const Id<TimeSyncModel>& id) {
-            this->localSM().postEvent(new MoveOnTimeSync_Event{id, sp});
+          [&](const Id<SynchronizationModel>& id) {
+            this->localSM().postEvent(new MoveOnSynchronization_Event{id, sp});
           },
           [&]() { this->localSM().postEvent(new MoveOnNothing_Event{sp}); },
           cs->createdStates,
           cs->createdEvents,
-          cs->createdTimeSyncs);
+          cs->createdSynchronizations);
     }
   }
   void on_released(QPointF scene, Scenario::Point sp)
@@ -176,13 +176,13 @@ public:
           [&](const Id<EventModel>& id) {
             this->localSM().postEvent(new ReleaseOnEvent_Event{id, sp});
           },
-          [&](const Id<TimeSyncModel>& id) {
-            this->localSM().postEvent(new ReleaseOnTimeSync_Event{id, sp});
+          [&](const Id<SynchronizationModel>& id) {
+            this->localSM().postEvent(new ReleaseOnSynchronization_Event{id, sp});
           },
           [&]() { this->localSM().postEvent(new ReleaseOnNothing_Event{sp}); },
           cs->createdStates,
           cs->createdEvents,
-          cs->createdTimeSyncs);
+          cs->createdSynchronizations);
     }
   }
 
@@ -201,11 +201,11 @@ private:
     return getCollidingModels(
         this->m_palette.presenter().getEvents(), createdEvents, point);
   }
-  QList<Id<TimeSyncModel>> getCollidingTimeSyncs(
-      QPointF point, const QVector<Id<TimeSyncModel>>& createdTimeSyncs)
+  QList<Id<SynchronizationModel>> getCollidingSynchronizations(
+      QPointF point, const QVector<Id<SynchronizationModel>>& createdSynchronizations)
   {
     return getCollidingModels(
-        this->m_palette.presenter().getTimeSyncs(), createdTimeSyncs, point);
+        this->m_palette.presenter().getSynchronizations(), createdSynchronizations, point);
   }
 
   CreationState<Scenario_T, ToolPalette_T>* currentState() const
@@ -216,8 +216,8 @@ private:
       return m_createFromNothingState;
     else if (isStateActive(m_createFromStateState))
       return m_createFromStateState;
-    else if (isStateActive(m_createFromTimeSyncState))
-      return m_createFromTimeSyncState;
+    else if (isStateActive(m_createFromSynchronizationState))
+      return m_createFromSynchronizationState;
     else
       return nullptr;
   }
@@ -225,17 +225,17 @@ private:
   template <
       typename StateFun,
       typename EventFun,
-      typename TimeSyncFun,
+      typename SynchronizationFun,
       typename NothingFun>
   void mapWithCollision(
       QPointF point,
       StateFun st_fun,
       EventFun ev_fun,
-      TimeSyncFun tn_fun,
+      SynchronizationFun tn_fun,
       NothingFun nothing_fun,
       const QVector<Id<StateModel>>& createdStates,
       const QVector<Id<EventModel>>& createdEvents,
-      const QVector<Id<TimeSyncModel>>& createdTimeSyncs)
+      const QVector<Id<SynchronizationModel>>& createdSynchronizations)
   {
     auto collidingStates = getCollidingStates(point, createdStates);
     if (!collidingStates.empty())
@@ -251,10 +251,10 @@ private:
       return;
     }
 
-    auto collidingTimeSyncs = getCollidingTimeSyncs(point, createdTimeSyncs);
-    if (!collidingTimeSyncs.empty())
+    auto collidingSynchronizations = getCollidingSynchronizations(point, createdSynchronizations);
+    if (!collidingSynchronizations.empty())
     {
-      tn_fun(collidingTimeSyncs.first());
+      tn_fun(collidingSynchronizations.first());
       return;
     }
 
@@ -263,8 +263,8 @@ private:
 
   Creation_FromNothing<Scenario_T, ToolPalette_T>* m_createFromNothingState{};
   Creation_FromEvent<Scenario_T, ToolPalette_T>* m_createFromEventState{};
-  Creation_FromTimeSync<Scenario_T, ToolPalette_T>*
-      m_createFromTimeSyncState{};
+  Creation_FromSynchronization<Scenario_T, ToolPalette_T>*
+      m_createFromSynchronizationState{};
   Creation_FromState<Scenario_T, ToolPalette_T>* m_createFromStateState{};
   QState* m_waitState{};
 };

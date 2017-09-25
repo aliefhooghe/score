@@ -3,15 +3,15 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 class QGraphicsItem;
 namespace Scenario
 {
 class FullViewIntervalPresenter;
 class StatePresenter;
 class EventPresenter;
-class TimeSyncPresenter;
-class TimeSyncModel;
+class SynchronizationPresenter;
+class SynchronizationModel;
 struct DisplayedElementsContainer
 {
 
@@ -23,8 +23,8 @@ struct DisplayedElementsContainer
       const StateModel& est,
       const EventModel& sev,
       const EventModel& eev,
-      const TimeSyncModel& stn,
-      const TimeSyncModel& etn)
+      const SynchronizationModel& stn,
+      const SynchronizationModel& etn)
       : interval{&cst}
       , startState{&sst}
       , endState{&est}
@@ -40,8 +40,8 @@ struct DisplayedElementsContainer
   QPointer<const StateModel> endState{};
   QPointer<const EventModel> startEvent{};
   QPointer<const EventModel> endEvent{};
-  QPointer<const TimeSyncModel> startNode{};
-  QPointer<const TimeSyncModel> endNode{};
+  QPointer<const SynchronizationModel> startNode{};
+  QPointer<const SynchronizationModel> endNode{};
 };
 
 struct DisplayedElementsPresenterContainer
@@ -55,8 +55,8 @@ struct DisplayedElementsPresenterContainer
       StatePresenter* s2,
       EventPresenter* e1,
       EventPresenter* e2,
-      TimeSyncPresenter* t1,
-      TimeSyncPresenter* t2)
+      SynchronizationPresenter* t1,
+      SynchronizationPresenter* t2)
       : interval{cp}
       , startState{s1}
       , endState{s2}
@@ -72,7 +72,7 @@ struct DisplayedElementsPresenterContainer
   StatePresenter* endState{};
   EventPresenter* startEvent{};
   EventPresenter* endEvent{};
-  TimeSyncPresenter* startNode{};
-  TimeSyncPresenter* endNode{};
+  SynchronizationPresenter* startNode{};
+  SynchronizationPresenter* endNode{};
 };
 }

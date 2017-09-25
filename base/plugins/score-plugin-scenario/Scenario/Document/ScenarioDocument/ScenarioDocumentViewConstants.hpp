@@ -18,7 +18,7 @@ public:
     SlotHeader,
     SlotOverlay,
     IntervalHeader,
-    TimeSync,
+    Synchronization,
     Trigger,
     Event,
     State,
@@ -33,7 +33,7 @@ public:
   enum ItemZPos
   {
     Comment = 1,
-    TimeSync,
+    Synchronization,
     Event,
     Interval,
     SelectedInterval,

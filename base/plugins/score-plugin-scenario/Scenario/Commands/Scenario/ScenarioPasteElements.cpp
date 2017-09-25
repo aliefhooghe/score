@@ -3,7 +3,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/VerticalMovePolicy.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 
@@ -95,14 +95,14 @@ ScenarioPasteElements::ScenarioPasteElements(
   // be easily mapped.
   auto& stack = score::IDocument::documentContext(scenario).commandStack;
 
-  std::vector<TimeSyncModel*> timesyncs;
+  std::vector<SynchronizationModel*> timesyncs;
   std::vector<IntervalModel*> intervals;
   std::vector<EventModel*> events;
   std::vector<StateModel*> states;
 
   // TODO this is really a bad idea... either they should be properly added, or
   // the json should be modified without including anything in the scenario.
-  // Especially their parents aren't coherent (TimeSync must not have a parent
+  // Especially their parents aren't coherent (Synchronization must not have a parent
   // because it tries to access the event in the scenario if it has one and
   // Interval needs a parent for the RelativePath in LayerModel)
   // We deserialize everything
@@ -120,7 +120,7 @@ ScenarioPasteElements::ScenarioPasteElements(
     timesyncs.reserve(json_arr.size());
     for (const auto& element : json_arr)
     {
-      timesyncs.emplace_back(new TimeSyncModel{
+      timesyncs.emplace_back(new SynchronizationModel{
           JSONObject::Deserializer{element.toObject()}, nullptr});
     }
   }
@@ -146,8 +146,8 @@ ScenarioPasteElements::ScenarioPasteElements(
   // We generate identifiers for the forthcoming elements
   auto interval_ids = getStrongIdRange2<IntervalModel>(
       intervals.size(), scenario.intervals, intervals);
-  auto timesync_ids = getStrongIdRange2<TimeSyncModel>(
-      timesyncs.size(), scenario.timeSyncs, timesyncs);
+  auto timesync_ids = getStrongIdRange2<SynchronizationModel>(
+      timesyncs.size(), scenario.synchronizations, timesyncs);
   auto event_ids
       = getStrongIdRange2<EventModel>(events.size(), scenario.events, events);
   auto state_ids
@@ -156,13 +156,13 @@ ScenarioPasteElements::ScenarioPasteElements(
   // We set the new ids everywhere
   {
     int i = 0;
-    for (TimeSyncModel* timesync : timesyncs)
+    for (SynchronizationModel* timesync : timesyncs)
     {
       for (EventModel* event : events)
       {
-        if (event->timeSync() == timesync->id())
+        if (event->synchronization() == timesync->id())
         {
-          event->changeTimeSync(timesync_ids[i]);
+          event->changeSynchronization(timesync_ids[i]);
         }
       }
 
@@ -177,8 +177,8 @@ ScenarioPasteElements::ScenarioPasteElements(
     {
       {
         auto it = std::find_if(
-            timesyncs.begin(), timesyncs.end(), [&](TimeSyncModel* tn) {
-              return tn->id() == event->timeSync();
+            timesyncs.begin(), timesyncs.end(), [&](SynchronizationModel* tn) {
+              return tn->id() == event->synchronization();
             });
         SCORE_ASSERT(it != timesyncs.end());
         auto timesync = *it;
@@ -273,7 +273,7 @@ ScenarioPasteElements::ScenarioPasteElements(
       if (t < earliestTime)
         earliestTime = t;
     }
-    for (const TimeSyncModel* tn : timesyncs)
+    for (const SynchronizationModel* tn : timesyncs)
     {
       const auto& t = tn->date();
       if (t < earliestTime)
@@ -291,7 +291,7 @@ ScenarioPasteElements::ScenarioPasteElements(
     {
       interval->setStartDate(interval->startDate() + delta_t);
     }
-    for (TimeSyncModel* tn : timesyncs)
+    for (SynchronizationModel* tn : timesyncs)
     {
       tn->setDate(tn->date() + delta_t);
     }
@@ -375,7 +375,7 @@ void ScenarioPasteElements::undo(const score::DocumentContext& ctx) const
 
   for (const auto& elt : m_ids_timesyncs)
   {
-    scenario.timeSyncs.remove(elt);
+    scenario.synchronizations.remove(elt);
   }
   for (const auto& elt : m_ids_events)
   {
@@ -395,15 +395,15 @@ void ScenarioPasteElements::redo(const score::DocumentContext& ctx) const
 {
   Scenario::ProcessModel& scenario = m_ts.find(ctx);
 
-  std::vector<TimeSyncModel*> addedTimeSyncs;
-  addedTimeSyncs.reserve(m_json_timesyncs.size());
+  std::vector<SynchronizationModel*> addedSynchronizations;
+  addedSynchronizations.reserve(m_json_timesyncs.size());
   std::vector<EventModel*> addedEvents;
   addedEvents.reserve(m_json_events.size());
   for (const auto& timesync : m_json_timesyncs)
   {
-    auto tn = new TimeSyncModel(JSONObject::Deserializer{timesync}, &scenario);
-    scenario.timeSyncs.add(tn);
-    addedTimeSyncs.push_back(tn);
+    auto tn = new SynchronizationModel(JSONObject::Deserializer{timesync}, &scenario);
+    scenario.synchronizations.add(tn);
+    addedSynchronizations.push_back(tn);
   }
 
   for (const auto& event : m_json_events)
@@ -431,9 +431,9 @@ void ScenarioPasteElements::redo(const score::DocumentContext& ctx) const
   {
     updateEventExtent(event->id(), scenario);
   }
-  for (const auto& timesync : addedTimeSyncs)
+  for (const auto& timesync : addedSynchronizations)
   {
-    updateTimeSyncExtent(timesync->id(), scenario);
+    updateSynchronizationExtent(timesync->id(), scenario);
   }
 }
 

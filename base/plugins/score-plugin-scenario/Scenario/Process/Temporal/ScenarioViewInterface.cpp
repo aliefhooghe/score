@@ -24,9 +24,9 @@
 #include <Scenario/Document/State/StateModel.hpp>
 #include <Scenario/Document/State/StatePresenter.hpp>
 #include <Scenario/Document/State/StateView.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncView.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationView.hpp>
 #include <Scenario/Document/VerticalExtent.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <Scenario/Process/Temporal/TemporalScenarioView.hpp>
@@ -100,7 +100,7 @@ void ScenarioViewInterface::on_intervalMoved(
   m_presenter.m_view->update();
 }
 
-void ScenarioViewInterface::on_timeSyncMoved(const TimeSyncPresenter& timesync)
+void ScenarioViewInterface::on_synchronizationMoved(const SynchronizationPresenter& timesync)
 {
   auto h = m_presenter.m_view->boundingRect().height();
   timesync.view()->setExtent(timesync.model().extent() * h);

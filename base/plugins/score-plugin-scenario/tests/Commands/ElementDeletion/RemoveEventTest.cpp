@@ -16,10 +16,10 @@ class RemoveEventTest : public QObject
 {
   Q_OBJECT
 private slots:
-  void RemoveEventAndTimeSyncTest()
+  void RemoveEventAndSynchronizationTest()
   {
-    // only one event on a timeSync
-    // the timeSync will be deleted too
+    // only one event on a synchronization
+    // the synchronization will be deleted too
 
     Scenario::ProcessModel* scenar = new ScenarioModel(
         std::chrono::seconds(15), Id<ProcessModel>{0}, qApp);
@@ -27,7 +27,7 @@ private slots:
     EventData data{};
     data.dDate.setMSecs(10);
     data.relativeY = 0.4;
-    data.endTimeSyncId = Id<TimeSyncModel>(-1);
+    data.endSynchronizationId = Id<SynchronizationModel>(-1);
 
     CreateEvent eventCmd(
         {
@@ -38,10 +38,10 @@ private slots:
 
     auto eventCreated = scenar->event(eventCmd.createdEvent());
     auto event_id = eventCreated->id();
-    auto tn_id = eventCreated->timeSync();
+    auto tn_id = eventCreated->synchronization();
 
     int nbOfEvent = 3;
-    int nbOfTimeSyncs = 3;
+    int nbOfSynchronizations = 3;
 
     RemoveEvent removeCmd(
         {
@@ -51,7 +51,7 @@ private slots:
 
     removeCmd.redo(ctx);
     QCOMPARE((int)scenar->events().size(), nbOfEvent - 1);
-    QCOMPARE((int)scenar->timeSyncs().size(), nbOfTimeSyncs - 1);
+    QCOMPARE((int)scenar->synchronizations().size(), nbOfSynchronizations - 1);
     try
     {
       scenar->event(event_id);
@@ -62,8 +62,8 @@ private slots:
     }
     try
     {
-      scenar->timeSync(tn_id);
-      QFAIL("TimeSync call did not throw!");
+      scenar->synchronization(tn_id);
+      QFAIL("Synchronization call did not throw!");
     }
     catch (...)
     {
@@ -71,12 +71,12 @@ private slots:
 
     removeCmd.undo(ctx);
     QCOMPARE((int)scenar->events().size(), nbOfEvent);
-    QCOMPARE((int)scenar->timeSyncs().size(), nbOfTimeSyncs);
+    QCOMPARE((int)scenar->synchronizations().size(), nbOfSynchronizations);
     QCOMPARE(scenar->event(event_id)->heightPercentage(), 0.4);
 
     removeCmd.redo(ctx);
     QCOMPARE((int)scenar->events().size(), nbOfEvent - 1);
-    QCOMPARE((int)scenar->timeSyncs().size(), nbOfTimeSyncs - 1);
+    QCOMPARE((int)scenar->synchronizations().size(), nbOfSynchronizations - 1);
 
     try
     {
@@ -88,8 +88,8 @@ private slots:
     }
     try
     {
-      scenar->timeSync(tn_id);
-      QFAIL("TimeSync call did not throw!");
+      scenar->synchronization(tn_id);
+      QFAIL("Synchronization call did not throw!");
     }
     catch (...)
     {
@@ -100,8 +100,8 @@ private slots:
 
   void RemoveOnlyEventTest()
   {
-    // two events on a same timeSync
-    // test removing just one of them : the timeSync stay
+    // two events on a same synchronization
+    // test removing just one of them : the synchronization stay
 
     Scenario::ProcessModel* scenar = new ScenarioModel(
         std::chrono::seconds(15), Id<ProcessModel>{0}, qApp);
@@ -109,7 +109,7 @@ private slots:
     EventData data{};
     data.dDate.setMSecs(10);
     data.relativeY = 0.8;
-    data.endTimeSyncId = Id<TimeSyncModel>(-1);
+    data.endSynchronizationId = Id<SynchronizationModel>(-1);
 
     CreateEvent eventCmd(
         {
@@ -118,7 +118,7 @@ private slots:
         data);
     eventCmd.redo(ctx);
 
-    data.endTimeSyncId = eventCmd.createdTimeSync();
+    data.endSynchronizationId = eventCmd.createdSynchronization();
     data.relativeY = 0.4;
 
     CreateEvent event2Cmd(
@@ -137,7 +137,7 @@ private slots:
     auto prevIntervals = eventCreated->previousIntervals();
 
     int nbOfEvent = 4;
-    int nbOfTimeSyncs = 3;
+    int nbOfSynchronizations = 3;
 
     RemoveEvent removeCmd(
         {
@@ -147,7 +147,7 @@ private slots:
 
     removeCmd.redo(ctx);
     QCOMPARE((int)scenar->events().size(), nbOfEvent - 1);
-    QCOMPARE((int)scenar->timeSyncs().size(), nbOfTimeSyncs);
+    QCOMPARE((int)scenar->synchronizations().size(), nbOfSynchronizations);
     try
     {
       scenar->event(event_id);
@@ -159,7 +159,7 @@ private slots:
 
     removeCmd.undo(ctx);
     QCOMPARE((int)scenar->events().size(), nbOfEvent);
-    QCOMPARE((int)scenar->timeSyncs().size(), nbOfTimeSyncs);
+    QCOMPARE((int)scenar->synchronizations().size(), nbOfSynchronizations);
     QCOMPARE(scenar->event(event_id)->heightPercentage(), 0.4);
     QCOMPARE(
         scenar->event(event_id)->previousIntervals().size(),
@@ -170,7 +170,7 @@ private slots:
 
     removeCmd.redo(ctx);
     QCOMPARE((int)scenar->events().size(), nbOfEvent - 1);
-    QCOMPARE((int)scenar->timeSyncs().size(), nbOfTimeSyncs);
+    QCOMPARE((int)scenar->synchronizations().size(), nbOfSynchronizations);
 
     try
     {

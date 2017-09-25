@@ -36,7 +36,7 @@ class TestStatesCurve: public IscoreTestBase
             auto newStateCmd = new CreateState(scenar, scenar.startEvent().id(), 0);
             redo(newStateCmd);
 
-            auto newConstraintCmd = new CreateConstraint_State_Event_TimeSync(scenar, newStateCmd->createdState(), TimeValue::fromMsecs(500), 0);
+            auto newConstraintCmd = new CreateConstraint_State_Event_Synchronization(scenar, newStateCmd->createdState(), TimeValue::fromMsecs(500), 0);
             redo(newConstraintCmd);
 
             score::Address addr{"MockDevice", {"test1"}};

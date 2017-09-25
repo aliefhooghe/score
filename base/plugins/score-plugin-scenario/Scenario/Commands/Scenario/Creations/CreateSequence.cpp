@@ -25,7 +25,7 @@
 #include <Process/State/MessageNode.hpp>
 #include <Process/TimeValue.hpp>
 #include <Scenario/Commands/Cohesion/InterpolateMacro.hpp>
-#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_TimeSync.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_Synchronization.hpp>
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/State/ItemModel/MessageItemModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
@@ -226,12 +226,12 @@ CreateSequence* CreateSequence::make(
 {
   auto cmd = new CreateSequence;
 
-  auto create_command = new CreateInterval_State_Event_TimeSync{
+  auto create_command = new CreateInterval_State_Event_Synchronization{
       scenario, start, date, endStateY};
   cmd->m_newInterval = create_command->createdInterval();
   cmd->m_newState = create_command->createdState();
   cmd->m_newEvent = create_command->createdEvent();
-  cmd->m_newTimeSync = create_command->createdTimeSync();
+  cmd->m_newSynchronization = create_command->createdSynchronization();
 
   create_command->redo(ctx);
   cmd->addCommand(create_command);

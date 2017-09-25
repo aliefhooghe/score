@@ -9,7 +9,7 @@
 #include <Engine/Executor/IntervalComponent.hpp>
 #include <Engine/Executor/EventComponent.hpp>
 #include <Engine/Executor/StateComponent.hpp>
-#include <Engine/Executor/TimeSyncComponent.hpp>
+#include <Engine/Executor/SynchronizationComponent.hpp>
 
 #include "ProcessComponent.hpp"
 #include <Scenario/Document/Interval/IntervalModel.hpp>
@@ -35,7 +35,7 @@ namespace Execution
 {
 class EventComponent;
 class StateComponent;
-class TimeSyncComponent;
+class SynchronizationComponent;
 }
 } // namespace RecreateOnPlay
 namespace Scenario
@@ -43,7 +43,7 @@ namespace Scenario
 class ProcessModel;
 class EventModel;
 class StateModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class CSPCoherencyCheckerInterface;
 } // namespace Scenario
 
@@ -85,7 +85,7 @@ public:
   {
     return m_ossia_timeevents;
   }
-  const auto& timeSyncs() const
+  const auto& synchronizations() const
   {
     return m_ossia_timesyncs;
   }
@@ -105,7 +105,7 @@ public:
 
   std::function<void()> removing(const Scenario::IntervalModel& e, IntervalComponent& c);
 
-  std::function<void()> removing(const Scenario::TimeSyncModel& e, TimeSyncComponent& c);
+  std::function<void()> removing(const Scenario::SynchronizationModel& e, SynchronizationComponent& c);
 
   std::function<void()> removing(const Scenario::EventModel& e, EventComponent& c);
 
@@ -117,14 +117,14 @@ protected:
 
   void eventCallback(EventComponent& ev, ossia::time_event::status newStatus);
 
-  void timeSyncCallback(
-      Engine::Execution::TimeSyncComponent* tn, ossia::time_value date);
+  void synchronizationCallback(
+      Engine::Execution::SynchronizationComponent* tn, ossia::time_value date);
 
   score::hash_map<Id<Scenario::IntervalModel>, std::shared_ptr<IntervalComponent>>
       m_ossia_intervals;
   score::hash_map<Id<Scenario::StateModel>, std::shared_ptr<StateComponent>>
       m_ossia_states;
-  score::hash_map<Id<Scenario::TimeSyncModel>, std::shared_ptr<TimeSyncComponent>>
+  score::hash_map<Id<Scenario::SynchronizationModel>, std::shared_ptr<SynchronizationComponent>>
       m_ossia_timesyncs;
   score::hash_map<Id<Scenario::EventModel>, std::shared_ptr<EventComponent>>
       m_ossia_timeevents;
@@ -135,14 +135,14 @@ protected:
   const Context& m_ctx;
 
   Scenario::CSPCoherencyCheckerInterface* m_checker{};
-  QVector<Id<Scenario::TimeSyncModel>> m_pastTn{};
+  QVector<Id<Scenario::SynchronizationModel>> m_pastTn{};
   Scenario::ElementsProperties m_properties{};
 };
 
 using ScenarioComponentHierarchy
     = HierarchicalScenarioComponent<
         ScenarioComponentBase,
-        Scenario::ProcessModel, IntervalComponent, EventComponent, TimeSyncComponent, StateComponent, false>;
+        Scenario::ProcessModel, IntervalComponent, EventComponent, SynchronizationComponent, StateComponent, false>;
 
 struct ScenarioComponent final : public ScenarioComponentHierarchy
 {

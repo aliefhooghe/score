@@ -26,7 +26,7 @@ private slots:
     // data.id = 0; unused here
     data.dDate.setMSecs(10);
     data.relativeY = 0.2;
-    data.endTimeSyncId = Id<TimeSyncModel>(-1);
+    data.endSynchronizationId = Id<SynchronizationModel>(-1);
 
     CreateEvent cmd(
         {
@@ -40,7 +40,7 @@ private slots:
 
     QCOMPARE((int)scenar->events().size(), 3);
     QCOMPARE(event->heightPercentage(), 0.2);
-    QCOMPARE(cmd.createdTimeSync(), event->timeSync());
+    QCOMPARE(cmd.createdSynchronization(), event->synchronization());
 
     cmd.undo(ctx);
     QCOMPARE((int)scenar->events().size(), 2);
@@ -55,14 +55,14 @@ private slots:
 
     delete scenar;
   }
-  void CreateOnTimeSyncTest()
+  void CreateOnSynchronizationTest()
   {
     Scenario::ProcessModel* scenar = new ScenarioModel(
         std::chrono::seconds(15), Id<ProcessModel>{0}, qApp);
     EventData data{};
     data.dDate.setMSecs(10);
     data.relativeY = 0.6;
-    data.endTimeSyncId = Id<TimeSyncModel>(-1);
+    data.endSynchronizationId = Id<SynchronizationModel>(-1);
 
     CreateEvent cmd1(
         {
@@ -71,7 +71,7 @@ private slots:
         data);
     cmd1.redo(ctx);
 
-    data.endTimeSyncId = cmd1.createdTimeSync();
+    data.endSynchronizationId = cmd1.createdSynchronization();
     data.relativeY = 0.2;
 
     CreateEvent cmd(
@@ -81,20 +81,20 @@ private slots:
         data);
 
     int eventCount = 4;
-    int timeSyncCount = 3;
+    int synchronizationCount = 3;
 
     cmd.redo(ctx);
     QCOMPARE((int)scenar->events().size(), eventCount);
-    QCOMPARE((int)scenar->timeSyncs().size(), timeSyncCount);
+    QCOMPARE((int)scenar->synchronizations().size(), synchronizationCount);
     QCOMPARE(scenar->event(cmd.createdEvent())->heightPercentage(), 0.2);
 
     cmd.undo(ctx);
     QCOMPARE((int)scenar->events().size(), eventCount - 1);
-    QCOMPARE((int)scenar->timeSyncs().size(), timeSyncCount);
+    QCOMPARE((int)scenar->synchronizations().size(), synchronizationCount);
 
     cmd.redo(ctx);
     QCOMPARE((int)scenar->events().size(), eventCount);
-    QCOMPARE((int)scenar->timeSyncs().size(), timeSyncCount);
+    QCOMPARE((int)scenar->synchronizations().size(), synchronizationCount);
     QCOMPARE(scenar->event(cmd.createdEvent())->heightPercentage(), 0.2);
 
     // Delete them else they stay in qApp !

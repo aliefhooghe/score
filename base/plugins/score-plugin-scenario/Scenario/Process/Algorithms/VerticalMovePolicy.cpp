@@ -10,7 +10,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Document/VerticalExtent.hpp>
 #include <score/model/EntityMap.hpp>
 #include <score/model/Identifier.hpp>
@@ -33,13 +33,13 @@ void updateEventExtent(const Id<EventModel>& id, Scenario::ProcessModel& s)
   }
 
   ev.setExtent({min, max});
-  updateTimeSyncExtent(ev.timeSync(), s);
+  updateSynchronizationExtent(ev.synchronization(), s);
 }
 
-void updateTimeSyncExtent(
-    const Id<TimeSyncModel>& id, Scenario::ProcessModel& s)
+void updateSynchronizationExtent(
+    const Id<SynchronizationModel>& id, Scenario::ProcessModel& s)
 {
-  auto& tn = s.timeSyncs.at(id);
+  auto& tn = s.synchronizations.at(id);
   double min = std::numeric_limits<double>::max();
   double max = std::numeric_limits<double>::lowest();
   for (const auto& ev_id : tn.events())

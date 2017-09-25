@@ -20,8 +20,8 @@
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/Event/EventPresenter.hpp>
 #include <Scenario/Document/State/StatePresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
 #include <score/document/DocumentContext.hpp>
 #include <score/tools/Todo.hpp>
 
@@ -72,9 +72,9 @@ LayerPresenter::LayerPresenter(
   m_endEventPresenter
       = new EventPresenter{layer.endEvent(), m_view, this};
   m_startNodePresenter
-      = new TimeSyncPresenter{layer.startTimeSync(), m_view, this};
+      = new SynchronizationPresenter{layer.startSynchronization(), m_view, this};
   m_endNodePresenter
-      = new TimeSyncPresenter{layer.endTimeSync(), m_view, this};
+      = new SynchronizationPresenter{layer.endSynchronization(), m_view, this};
 
   auto elements = std::make_tuple(
       m_intervalPresenter,
@@ -100,13 +100,13 @@ LayerPresenter::LayerPresenter(
       [=](const TimeVal&) {
         m_viewUpdater.updateEvent(*m_endEventPresenter);
       });
-  con(m_endNodePresenter->model(), &TimeSyncModel::extentChanged, this,
+  con(m_endNodePresenter->model(), &SynchronizationModel::extentChanged, this,
       [=](const VerticalExtent&) {
-        m_viewUpdater.updateTimeSync(*m_endNodePresenter);
+        m_viewUpdater.updateSynchronization(*m_endNodePresenter);
       });
-  con(m_endNodePresenter->model(), &TimeSyncModel::dateChanged, this,
+  con(m_endNodePresenter->model(), &SynchronizationModel::dateChanged, this,
       [=](const TimeVal&) {
-        m_viewUpdater.updateTimeSync(*m_endNodePresenter);
+        m_viewUpdater.updateSynchronization(*m_endNodePresenter);
       });
 
   connect(
@@ -203,8 +203,8 @@ void LayerPresenter::updateAllElements()
   m_viewUpdater.updateInterval(*m_intervalPresenter);
   m_viewUpdater.updateEvent(*m_startEventPresenter);
   m_viewUpdater.updateEvent(*m_endEventPresenter);
-  m_viewUpdater.updateTimeSync(*m_startNodePresenter);
-  m_viewUpdater.updateTimeSync(*m_endNodePresenter);
+  m_viewUpdater.updateSynchronization(*m_startNodePresenter);
+  m_viewUpdater.updateSynchronization(*m_endNodePresenter);
 }
 
 void LayerPresenter::fillContextMenu(

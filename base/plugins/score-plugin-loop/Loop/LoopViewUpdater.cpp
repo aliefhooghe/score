@@ -9,7 +9,7 @@
 #include <QtGlobal>
 #include <Scenario/Document/Interval/Temporal/TemporalIntervalView.hpp>
 #include <Scenario/Document/Event/EventView.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncView.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationView.hpp>
 
 #include "LoopViewUpdater.hpp"
 #include <Process/TimeValue.hpp>
@@ -22,8 +22,8 @@
 #include <Scenario/Document/State/StateModel.hpp>
 #include <Scenario/Document/State/StatePresenter.hpp>
 #include <Scenario/Document/State/StateView.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
 #include <Scenario/Document/VerticalExtent.hpp>
 
 namespace Loop
@@ -86,7 +86,7 @@ void ViewUpdater::updateInterval(
   m_presenter.m_view->update();
 }
 
-void ViewUpdater::updateTimeSync(const Scenario::TimeSyncPresenter& timesync)
+void ViewUpdater::updateSynchronization(const Scenario::SynchronizationPresenter& timesync)
 {
   timesync.view()->setExtent(2. * extent());
 

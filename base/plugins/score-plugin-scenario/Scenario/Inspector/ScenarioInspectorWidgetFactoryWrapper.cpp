@@ -5,12 +5,12 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/ScenarioInterface.hpp>
 
 #include <Scenario/Inspector/Interval/IntervalInspectorFactory.hpp>
 #include <Scenario/Inspector/Summary/SummaryInspectorWidget.hpp>
-#include <Scenario/Inspector/TimeSync/TimeSyncInspectorWidget.hpp>
+#include <Scenario/Inspector/Synchronization/SynchronizationInspectorWidget.hpp>
 #include <Scenario/Inspector/Event/EventInspectorWidget.hpp>
 #include <Scenario/Inspector/State/StateInspectorWidget.hpp>
 
@@ -23,7 +23,7 @@ ScenarioInspectorWidgetFactoryWrapper::make(
     QWidget* parent) const
 {
   std::set<const IntervalModel*> intervals;
-  std::set<const TimeSyncModel*> timesyncs;
+  std::set<const SynchronizationModel*> timesyncs;
   std::set<const EventModel*> events;
   std::set<const StateModel*> states;
 
@@ -40,7 +40,7 @@ ScenarioInspectorWidgetFactoryWrapper::make(
     {
       if (auto ev = scenar->findEvent(st->eventId()))
       {
-        auto tn = scenar->findTimeSync(ev->timeSync());
+        auto tn = scenar->findSynchronization(ev->synchronization());
         if (!tn)
           continue;
         states.insert(st);
@@ -50,13 +50,13 @@ ScenarioInspectorWidgetFactoryWrapper::make(
     }
     else if (auto ev = dynamic_cast<const EventModel*>(elt))
     {
-      auto tn = scenar->findTimeSync(ev->timeSync());
+      auto tn = scenar->findSynchronization(ev->synchronization());
       if (!tn)
         continue;
       events.insert(ev);
       timesyncs.insert(tn);
     }
-    else if (auto tn = dynamic_cast<const TimeSyncModel*>(elt))
+    else if (auto tn = dynamic_cast<const SynchronizationModel*>(elt))
     {
       timesyncs.insert(tn);
     }
@@ -71,7 +71,7 @@ ScenarioInspectorWidgetFactoryWrapper::make(
   if (events.size() == 1 && intervals.empty())
       return new EventInspectorWidget{**events.begin(), doc, parent};
   if (timesyncs.size() == 1 && intervals.empty())
-    return new TimeSyncInspectorWidget{**timesyncs.begin(), doc, parent};
+    return new SynchronizationInspectorWidget{**timesyncs.begin(), doc, parent};
 
   if (intervals.size() == 1 && timesyncs.empty())
   {
@@ -91,7 +91,7 @@ bool ScenarioInspectorWidgetFactoryWrapper::matches(
   return std::any_of(objects.begin(), objects.end(), [](const QObject* obj) {
     return dynamic_cast<const StateModel*>(obj)
            || dynamic_cast<const EventModel*>(obj)
-           || dynamic_cast<const TimeSyncModel*>(obj)
+           || dynamic_cast<const SynchronizationModel*>(obj)
            || dynamic_cast<const IntervalModel*>(obj);
   });
 }

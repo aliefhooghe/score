@@ -8,11 +8,11 @@ namespace Scenario
 class IntervalModel;
 class EventModel;
 class ProcessModel;
-class TimeSyncModel;
+class SynchronizationModel;
 SCORE_PLUGIN_SCENARIO_EXPORT void
-updateTimeSyncExtent(const Id<TimeSyncModel>& id, Scenario::ProcessModel& s);
+updateSynchronizationExtent(const Id<SynchronizationModel>& id, Scenario::ProcessModel& s);
 
-// Will call updateTimeSyncExtent
+// Will call updateSynchronizationExtent
 SCORE_PLUGIN_SCENARIO_EXPORT void
 updateEventExtent(const Id<EventModel>& id, Scenario::ProcessModel& s);
 

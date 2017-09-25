@@ -9,7 +9,7 @@
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <Scenario/Commands/Interval/AddProcessToInterval.hpp>
 #include <score/command/Dispatchers/MacroCommandDispatcher.hpp>
-#include <Scenario/Commands/Scenario/Creations/CreateTimeSync_Event_State.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateSynchronization_Event_State.hpp>
 #include <Scenario/Commands/Interval/Rack/AddSlotToRack.hpp>
 #include <Scenario/Commands/Interval/AddLayerInNewSlot.hpp>
 
@@ -120,11 +120,11 @@ bool DropHandler::createInParallel(
     TimeVal t = drop.dropMaxDuration();
 
     // Create the beginning
-    auto start_cmd = new Scenario::Command::CreateTimeSync_Event_State{scenar, pt.date, pt.y};
+    auto start_cmd = new Scenario::Command::CreateSynchronization_Event_State{scenar, pt.date, pt.y};
     m.submitCommand(start_cmd);
 
     // Create a box with the duration of the longest song
-    auto box_cmd = new Scenario::Command::CreateInterval_State_Event_TimeSync{
+    auto box_cmd = new Scenario::Command::CreateInterval_State_Event_Synchronization{
             scenar, start_cmd->createdState(), pt.date + t, pt.y};
     m.submitCommand(box_cmd);
     auto& interval = scenar.interval(box_cmd->createdInterval());
@@ -145,7 +145,7 @@ static bool intervalHasNoFollowers(
         const Scenario::ProcessModel& scenar,
         const Scenario::IntervalModel& cst)
 {
-    auto& tn = Scenario::endTimeSync(cst, scenar);
+    auto& tn = Scenario::endSynchronization(cst, scenar);
     for(auto& event_id : tn.events())
     {
         Scenario::EventModel& event = scenar.events.at(event_id);

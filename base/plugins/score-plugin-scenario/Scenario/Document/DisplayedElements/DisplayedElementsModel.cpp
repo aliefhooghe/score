@@ -4,7 +4,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <algorithm>
 
 #include "DisplayedElementsModel.hpp"
@@ -33,12 +33,12 @@ IntervalModel& DisplayedElementsModel::interval() const
   return *m_elements.interval;
 }
 
-const TimeSyncModel& DisplayedElementsModel::startTimeSync() const
+const SynchronizationModel& DisplayedElementsModel::startSynchronization() const
 {
   return *m_elements.startNode;
 }
 
-const TimeSyncModel& DisplayedElementsModel::endTimeSync() const
+const SynchronizationModel& DisplayedElementsModel::endSynchronization() const
 {
   return *m_elements.endNode;
 }

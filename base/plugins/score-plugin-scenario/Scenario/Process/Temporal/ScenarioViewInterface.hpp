@@ -9,7 +9,7 @@ class EventPresenter;
 class StatePresenter;
 class TemporalIntervalPresenter;
 class TemporalScenarioPresenter;
-class TimeSyncPresenter;
+class SynchronizationPresenter;
 class CommentBlockPresenter;
 class ScenarioViewInterface
 {
@@ -18,7 +18,7 @@ public:
 
   void on_eventMoved(const EventPresenter& event);
   void on_intervalMoved(const TemporalIntervalPresenter& interval);
-  void on_timeSyncMoved(const TimeSyncPresenter& timesync);
+  void on_synchronizationMoved(const SynchronizationPresenter& timesync);
   void on_stateMoved(const StatePresenter& state);
   void on_commentMoved(const CommentBlockPresenter& comment);
 

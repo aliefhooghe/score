@@ -25,7 +25,7 @@
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/ScenarioDocument/ProcessFocusManager.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Application/ScenarioApplicationPlugin.hpp>
 
 #include <score/application/ApplicationContext.hpp>
@@ -73,7 +73,7 @@ ScenarioDocumentModel::ScenarioDocumentModel(
   m_baseScenario->interval().duration.setMaxInfinite(true);
   m_baseScenario->endEvent().setDate(
       m_baseScenario->interval().duration.defaultDuration());
-  m_baseScenario->endTimeSync().setDate(
+  m_baseScenario->endSynchronization().setDate(
       m_baseScenario->interval().duration.defaultDuration());
 
   auto& doc_metadata

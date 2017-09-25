@@ -3,7 +3,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/ProcessPolicy.hpp>
 #include <Scenario/Process/Algorithms/VerticalMovePolicy.hpp>
 #include <Scenario/Process/ScenarioInterface.hpp>
@@ -26,11 +26,11 @@ BaseScenarioContainer::BaseScenarioContainer(QObject* parentObject)
     : m_parent{parentObject}
 {
   auto& stack = score::IDocument::documentContext(*m_parent).commandStack;
-  m_startNode = new TimeSyncModel{Scenario::startId<TimeSyncModel>(),
+  m_startNode = new SynchronizationModel{Scenario::startId<SynchronizationModel>(),
                                   {0.2, 0.8},
                                   TimeVal::zero(),
                                   m_parent};
-  m_endNode = new TimeSyncModel{Scenario::endId<TimeSyncModel>(),
+  m_endNode = new SynchronizationModel{Scenario::endId<SynchronizationModel>(),
                                 {0.2, 0.8},
                                 TimeVal::zero(),
                                 m_parent};
@@ -74,10 +74,10 @@ BaseScenarioContainer::BaseScenarioContainer(
   m_interval = new IntervalModel{*source.m_interval,
                                      source.m_interval->id(), m_parent};
 
-  m_startNode = new TimeSyncModel{*source.m_startNode,
+  m_startNode = new SynchronizationModel{*source.m_startNode,
                                   source.m_startNode->id(), m_parent};
   m_endNode
-      = new TimeSyncModel{*source.m_endNode, source.m_endNode->id(), m_parent};
+      = new SynchronizationModel{*source.m_endNode, source.m_endNode->id(), m_parent};
 
   m_startEvent = new EventModel{*source.m_startEvent,
                                 source.m_startEvent->id(), m_parent};
@@ -138,8 +138,8 @@ EventModel* BaseScenarioContainer::findEvent(const Id<EventModel>& id) const
   }
 }
 
-TimeSyncModel*
-BaseScenarioContainer::findTimeSync(const Id<TimeSyncModel>& id) const
+SynchronizationModel*
+BaseScenarioContainer::findSynchronization(const Id<SynchronizationModel>& id) const
 {
   if (id == m_startNode->id())
   {
@@ -184,8 +184,8 @@ EventModel& BaseScenarioContainer::event(const Id<EventModel>& id) const
   return id == m_startEvent->id() ? *m_startEvent : *m_endEvent;
 }
 
-TimeSyncModel&
-BaseScenarioContainer::timeSync(const Id<TimeSyncModel>& id) const
+SynchronizationModel&
+BaseScenarioContainer::synchronization(const Id<SynchronizationModel>& id) const
 {
   SCORE_ASSERT(id == m_startNode->id() || id == m_endNode->id());
   return id == m_startNode->id() ? *m_startNode : *m_endNode;
@@ -202,12 +202,12 @@ IntervalModel& BaseScenarioContainer::interval() const
   return *m_interval;
 }
 
-TimeSyncModel& BaseScenarioContainer::startTimeSync() const
+SynchronizationModel& BaseScenarioContainer::startSynchronization() const
 {
   return *m_startNode;
 }
 
-TimeSyncModel& BaseScenarioContainer::endTimeSync() const
+SynchronizationModel& BaseScenarioContainer::endSynchronization() const
 {
   return *m_endNode;
 }

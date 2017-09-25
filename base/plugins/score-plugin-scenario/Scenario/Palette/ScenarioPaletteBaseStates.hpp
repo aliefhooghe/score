@@ -13,7 +13,7 @@
 namespace Scenario
 {
 class EventModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class IntervalModel;
 class StateModel;
 // OPTIMIZEME this when we have all the tools
@@ -29,12 +29,12 @@ public:
   void clear()
   {
     clickedEvent = ossia::none;
-    clickedTimeSync = ossia::none;
+    clickedSynchronization = ossia::none;
     clickedInterval = ossia::none;
     clickedState = ossia::none;
 
     hoveredEvent = ossia::none;
-    hoveredTimeSync = ossia::none;
+    hoveredSynchronization = ossia::none;
     hoveredInterval = ossia::none;
     hoveredState = ossia::none;
 
@@ -43,12 +43,12 @@ public:
 
   OptionalId<StateModel> clickedState;
   OptionalId<EventModel> clickedEvent;
-  OptionalId<TimeSyncModel> clickedTimeSync;
+  OptionalId<SynchronizationModel> clickedSynchronization;
   OptionalId<IntervalModel> clickedInterval;
 
   OptionalId<StateModel> hoveredState;
   OptionalId<EventModel> hoveredEvent;
-  OptionalId<TimeSyncModel> hoveredTimeSync;
+  OptionalId<SynchronizationModel> hoveredSynchronization;
   OptionalId<IntervalModel> hoveredInterval;
 
   Scenario::Point currentPoint{};

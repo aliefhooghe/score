@@ -1,11 +1,11 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <Scenario/Commands/MoveBaseEvent.hpp>
-#include <Scenario/Commands/TimeSync/TriggerCommandFactory/TriggerCommandFactoryList.hpp>
+#include <Scenario/Commands/Synchronization/TriggerCommandFactory/TriggerCommandFactoryList.hpp>
 #include <Scenario/Document/BaseScenario/BaseScenario.hpp>
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Inspector/Interval/IntervalInspectorWidget.hpp>
-#include <Scenario/Inspector/TimeSync/TriggerInspectorWidget.hpp>
+#include <Scenario/Inspector/Synchronization/TriggerInspectorWidget.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 
 #include <score/tools/std/Optional.hpp>
@@ -22,7 +22,7 @@
 
 #include "BaseIntervalInspectorDelegate.hpp"
 #include <Scenario/Document/Event/EventModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Inspector/Interval/IntervalInspectorDelegate.hpp>
 #include <score/command/Dispatchers/OngoingCommandDispatcher.hpp>
 #include <score/document/DocumentContext.hpp>
@@ -42,7 +42,7 @@ BaseIntervalInspectorDelegate::BaseIntervalInspectorDelegate(
 void BaseIntervalInspectorDelegate::updateElements()
 {
   auto& scenario = *safe_cast<BaseScenario*>(m_model.parent());
-  auto& tn = endTimeSync(m_model, scenario);
+  auto& tn = endSynchronization(m_model, scenario);
   m_triggerLine->updateExpression(tn.expression());
 }
 
@@ -51,7 +51,7 @@ void BaseIntervalInspectorDelegate::addWidgets_pre(
 {
   auto& scenario = *safe_cast<BaseScenario*>(m_model.parent());
   auto& ctx = score::IDocument::documentContext(scenario);
-  auto& tn = endTimeSync(m_model, scenario);
+  auto& tn = endSynchronization(m_model, scenario);
   m_triggerLine = new TriggerInspectorWidget{
       ctx, ctx.app.interfaces<Command::TriggerCommandFactoryList>(),
       tn, parent};

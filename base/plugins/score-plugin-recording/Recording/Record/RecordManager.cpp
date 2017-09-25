@@ -8,8 +8,8 @@
 #include <Explorer/Explorer/DeviceExplorerModel.hpp>
 #include <Scenario/Commands/Interval/AddOnlyProcessToInterval.hpp>
 #include <Scenario/Commands/Interval/Rack/AddSlotToRack.hpp>
-#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_TimeSync.hpp>
-#include <Scenario/Commands/Scenario/Creations/CreateTimeSync_Event_State.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_Synchronization.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateSynchronization_Event_State.hpp>
 #include <Scenario/Commands/Scenario/Displacement/MoveNewEvent.hpp>
 #include <Scenario/Commands/Scenario/ShowRackInViewModel.hpp>
 #include <core/document/Document.hpp>

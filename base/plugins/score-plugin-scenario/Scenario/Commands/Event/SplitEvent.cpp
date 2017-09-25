@@ -15,7 +15,7 @@
 #include "SplitEvent.hpp"
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <score/model/ModelMetadata.hpp>
 #include <score/serialization/DataStreamVisitor.hpp>
 #include <score/model/EntityMap.hpp>
@@ -62,7 +62,7 @@ void SplitEvent::redo(const score::DocumentContext& ctx) const
   auto& originalEvent = scenar.event(m_originalEvent);
   ScenarioCreate<EventModel>::redo(
       m_newEvent,
-      scenar.timeSyncs.at(originalEvent.timeSync()),
+      scenar.synchronizations.at(originalEvent.synchronization()),
       originalEvent.extent(),
       scenar);
 

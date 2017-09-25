@@ -18,10 +18,10 @@
 #include <Scenario/Document/State/StatePresenter.hpp>
 #include <Scenario/Document/State/StateView.hpp>
 
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncView.hpp>
-#include <Scenario/Document/TimeSync/TriggerView.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationView.hpp>
+#include <Scenario/Document/Synchronization/TriggerView.hpp>
 
 #include <Scenario/Document/Interval/SlotHandle.hpp>
 #include <Scenario/Document/Interval/Slot.hpp>
@@ -93,23 +93,23 @@ protected:
               ? event.id()
               : OptionalId<EventModel>{};
   }
-  OptionalId<TimeSyncModel>
-  itemToTimeSyncId(const QGraphicsItem* pressedItem) const
+  OptionalId<SynchronizationModel>
+  itemToSynchronizationId(const QGraphicsItem* pressedItem) const
   {
     const auto& timesync
-        = static_cast<const TimeSyncView*>(pressedItem)->presenter().model();
+        = static_cast<const SynchronizationView*>(pressedItem)->presenter().model();
     return timesync.parent() == &this->m_palette.model()
                ? timesync.id()
-               : OptionalId<TimeSyncModel>{};
+               : OptionalId<SynchronizationModel>{};
   }
-  OptionalId<TimeSyncModel>
+  OptionalId<SynchronizationModel>
   itemToTriggerId(const QGraphicsItem* pressedItem) const
   {
       const auto& timesync
-              = static_cast<const TimeSyncView*>(pressedItem->parentItem())->presenter().model();
+              = static_cast<const SynchronizationView*>(pressedItem->parentItem())->presenter().model();
       return timesync.parent() == &this->m_palette.model()
               ? timesync.id()
-              : OptionalId<TimeSyncModel>{};
+              : OptionalId<SynchronizationModel>{};
   }
   OptionalId<IntervalModel>
   itemToIntervalId(const QGraphicsItem* pressedItem) const
@@ -150,7 +150,7 @@ protected:
   template <
       typename EventFun,
       typename StateFun,
-      typename TimeSyncFun,
+      typename SynchronizationFun,
       typename IntervalFun,
       typename LeftBraceFun,
       typename RightBraceFun,
@@ -160,7 +160,7 @@ protected:
       const QGraphicsItem* item,
       StateFun st_fun,
       EventFun ev_fun,
-      TimeSyncFun tn_fun,
+      SynchronizationFun tn_fun,
       IntervalFun cst_fun,
       LeftBraceFun lbrace_fun,
       RightBraceFun rbrace_fun,
@@ -198,8 +198,8 @@ protected:
       case TriggerView::static_type():
         tryFun(tn_fun, itemToTriggerId(item));
         break;
-      case TimeSyncView::static_type():
-        tryFun(tn_fun, itemToTimeSyncId(item));
+      case SynchronizationView::static_type():
+        tryFun(tn_fun, itemToSynchronizationId(item));
         break;
 
       case StateView::static_type():

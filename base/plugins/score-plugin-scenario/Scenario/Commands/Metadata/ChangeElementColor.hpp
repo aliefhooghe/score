@@ -76,6 +76,6 @@ private:
 
 SCORE_COMMAND_DECL_T(ChangeElementColor<IntervalModel>)
 SCORE_COMMAND_DECL_T(ChangeElementColor<EventModel>)
-SCORE_COMMAND_DECL_T(ChangeElementColor<TimeSyncModel>)
+SCORE_COMMAND_DECL_T(ChangeElementColor<SynchronizationModel>)
 SCORE_COMMAND_DECL_T(ChangeElementColor<StateModel>)
 SCORE_COMMAND_DECL_T(ChangeElementColor<Process::ProcessModel>)

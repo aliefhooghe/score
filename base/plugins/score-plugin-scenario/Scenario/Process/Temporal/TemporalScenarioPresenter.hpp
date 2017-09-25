@@ -18,8 +18,8 @@
 #include <Scenario/Document/Event/EventPresenter.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
 #include <Scenario/Document/State/StatePresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <score/command/Dispatchers/OngoingCommandDispatcher.hpp>
 #include <score/model/Identifier.hpp>
@@ -90,9 +90,9 @@ public:
   {
     return m_events.at(id);
   }
-  const auto& timeSync(const Id<TimeSyncModel>& id) const
+  const auto& synchronization(const Id<SynchronizationModel>& id) const
   {
-    return m_timeSyncs.at(id);
+    return m_synchronizations.at(id);
   }
   const auto& interval(const Id<IntervalModel>& id) const
   {
@@ -110,9 +110,9 @@ public:
   {
     return m_events;
   }
-  const auto& getTimeSyncs() const
+  const auto& getSynchronizations() const
   {
-    return m_timeSyncs;
+    return m_synchronizations;
   }
   const auto& getIntervals() const
   {
@@ -172,8 +172,8 @@ public:
   void on_eventCreated(const EventModel&);
   void on_eventRemoved(const EventModel&);
 
-  void on_timeSyncCreated(const TimeSyncModel&);
-  void on_timeSyncRemoved(const TimeSyncModel&);
+  void on_synchronizationCreated(const SynchronizationModel&);
+  void on_synchronizationRemoved(const SynchronizationModel&);
 
   void on_intervalCreated(const IntervalModel&);
   void on_intervalRemoved(const IntervalModel&);
@@ -209,7 +209,7 @@ private:
 
   IdContainer<StatePresenter, StateModel> m_states;
   IdContainer<EventPresenter, EventModel> m_events;
-  IdContainer<TimeSyncPresenter, TimeSyncModel> m_timeSyncs;
+  IdContainer<SynchronizationPresenter, SynchronizationModel> m_synchronizations;
   IdContainer<TemporalIntervalPresenter, IntervalModel> m_intervals;
   IdContainer<CommentBlockPresenter, CommentBlockModel> m_comments;
 

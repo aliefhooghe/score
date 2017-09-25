@@ -5,7 +5,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventPresenter.hpp>
 #include <Scenario/Document/State/StatePresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
 
 #include "BaseScenarioDisplayedElementsProvider.hpp"
 #include <Scenario/Document/Interval/FullView/FullViewIntervalPresenter.hpp>
@@ -30,8 +30,8 @@ BaseScenarioDisplayedElementsProvider::make(IntervalModel& cst) const
                                       parent_base->startEvent(),
                                       parent_base->endEvent(),
 
-                                      parent_base->startTimeSync(),
-                                      parent_base->endTimeSync()};
+                                      parent_base->startSynchronization(),
+                                      parent_base->endSynchronization()};
   }
 
   return {};
@@ -53,8 +53,8 @@ BaseScenarioDisplayedElementsProvider::make_presenters(
         new StatePresenter{bs->endState(), view_parent, parent},
         new EventPresenter{bs->startEvent(), view_parent, parent},
         new EventPresenter{bs->endEvent(), view_parent, parent},
-        new TimeSyncPresenter{bs->startTimeSync(), view_parent, parent},
-        new TimeSyncPresenter{bs->endTimeSync(), view_parent, parent}};
+        new SynchronizationPresenter{bs->startSynchronization(), view_parent, parent},
+        new SynchronizationPresenter{bs->endSynchronization(), view_parent, parent}};
   }
   return {};
 }

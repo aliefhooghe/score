@@ -24,7 +24,7 @@ template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void
 DataStreamReader::read(const Scenario::EventModel& ev)
 {
-  m_stream << ev.m_timeSync << ev.m_states << ev.m_condition << ev.m_extent
+  m_stream << ev.m_synchronization << ev.m_states << ev.m_condition << ev.m_extent
            << ev.m_date << ev.m_offset;
 
   insertDelimiter();
@@ -35,7 +35,7 @@ template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void
 DataStreamWriter::write(Scenario::EventModel& ev)
 {
-  m_stream >> ev.m_timeSync >> ev.m_states >> ev.m_condition >> ev.m_extent
+  m_stream >> ev.m_synchronization >> ev.m_states >> ev.m_condition >> ev.m_extent
       >> ev.m_date >> ev.m_offset;
 
   checkDelimiter();
@@ -46,7 +46,7 @@ template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void
 JSONObjectReader::read(const Scenario::EventModel& ev)
 {
-  obj[strings.TimeSync] = toJsonValue(ev.m_timeSync);
+  obj[strings.Synchronization] = toJsonValue(ev.m_synchronization);
   obj[strings.States] = toJsonArray(ev.m_states);
 
   obj[strings.Condition] = toJsonObject(ev.m_condition);
@@ -61,8 +61,8 @@ template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void
 JSONObjectWriter::write(Scenario::EventModel& ev)
 {
-  ev.m_timeSync
-      = fromJsonValue<Id<Scenario::TimeSyncModel>>(obj[strings.TimeSync]);
+  ev.m_synchronization
+      = fromJsonValue<Id<Scenario::SynchronizationModel>>(obj[strings.Synchronization]);
   fromJsonValueArray(obj[strings.States].toArray(), ev.m_states);
 
   fromJsonObject(obj[strings.Condition], ev.m_condition);

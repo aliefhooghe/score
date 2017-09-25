@@ -23,7 +23,7 @@ ScenarioComponentBase::ScenarioComponentBase(
                                                  parent_obj}
     , m_intervalsNode{*node().create_child("intervals")}
     , m_eventsNode{*node().create_child("events")}
-    , m_timeSyncsNode{*node().create_child("timesyncs")}
+    , m_synchronizationsNode{*node().create_child("timesyncs")}
     , m_statesNode{*node().create_child("states")}
 {
 }
@@ -43,10 +43,10 @@ Event* ScenarioComponentBase::make<Event, Scenario::EventModel>(
 }
 
 template <>
-TimeSync* ScenarioComponentBase::make<TimeSync, Scenario::TimeSyncModel>(
-    const Id<score::Component>& id, Scenario::TimeSyncModel& elt)
+Synchronization* ScenarioComponentBase::make<Synchronization, Scenario::SynchronizationModel>(
+    const Id<score::Component>& id, Scenario::SynchronizationModel& elt)
 {
-  return new TimeSync{m_timeSyncsNode, id, elt, system(), this};
+  return new Synchronization{m_synchronizationsNode, id, elt, system(), this};
 }
 
 template <>

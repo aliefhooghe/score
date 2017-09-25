@@ -18,7 +18,7 @@ class MoveIntervalInScenario_StateWrapper;
 class MoveLeftBraceInScenario_StateWrapper;
 class MoveRightBraceInScenario_StateWrapper;
 class MoveEventInTopScenario_StateWrapper;
-class MoveTimeSyncInTopScenario_StateWrapper;
+class MoveSynchronizationInTopScenario_StateWrapper;
 class ProcessModel;
 class DisplayedElementsModel;
 class DisplayedElementsPresenter;
@@ -64,7 +64,7 @@ private:
             Scenario::MoveLeftBraceInScenario_StateWrapper,
             Scenario::MoveRightBraceInScenario_StateWrapper,
             Scenario::MoveEventInTopScenario_StateWrapper,
-            Scenario::MoveTimeSyncInTopScenario_StateWrapper>
+            Scenario::MoveSynchronizationInTopScenario_StateWrapper>
           m_state;
 
   ToolPaletteInputDispatcher<Scenario::Tool, ScenarioDisplayedElementsToolPalette, BaseElementContext, ScenarioDocumentPresenter>

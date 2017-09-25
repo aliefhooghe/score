@@ -18,12 +18,12 @@
 #include <Engine/Executor/IntervalComponent.hpp>
 #include <Engine/Executor/EventComponent.hpp>
 #include <Engine/Executor/StateComponent.hpp>
-#include <Engine/Executor/TimeSyncComponent.hpp>
+#include <Engine/Executor/SynchronizationComponent.hpp>
 #include <Scenario/Document/Interval/IntervalDurations.hpp>
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <score/tools/IdentifierGeneration.hpp>
 #include <Engine/Executor/ExecutorContext.hpp>
 
@@ -68,10 +68,10 @@ void BaseScenarioElement::init(BaseScenarioRefContainer element)
       m_ctx.time(element.interval().duration.minDuration()),
       m_ctx.time(element.interval().duration.maxDuration()));
 
-  m_ossia_startTimeSync = std::make_shared<TimeSyncComponent>(
-      element.startTimeSync(), m_ctx, newId(element.startTimeSync()), this);
-  m_ossia_endTimeSync = std::make_shared<TimeSyncComponent>(
-      element.endTimeSync(), m_ctx, newId(element.endTimeSync()), this);
+  m_ossia_startSynchronization = std::make_shared<SynchronizationComponent>(
+      element.startSynchronization(), m_ctx, newId(element.startSynchronization()), this);
+  m_ossia_endSynchronization = std::make_shared<SynchronizationComponent>(
+      element.endSynchronization(), m_ctx, newId(element.endSynchronization()), this);
 
   m_ossia_startEvent = std::make_shared<EventComponent>(element.startEvent(), m_ctx, newId(element.startEvent()), this);
   m_ossia_endEvent = std::make_shared<EventComponent>(element.endEvent(), m_ctx, newId(element.endEvent()), this);
@@ -82,8 +82,8 @@ void BaseScenarioElement::init(BaseScenarioRefContainer element)
   m_ossia_interval = std::make_shared<IntervalComponent>(
       element.interval(), m_ctx, newId(element.interval()), this);
 
-  m_ossia_startTimeSync->onSetup(main_start_node, m_ossia_startTimeSync->makeTrigger());
-  m_ossia_endTimeSync->onSetup(main_end_node, m_ossia_endTimeSync->makeTrigger());
+  m_ossia_startSynchronization->onSetup(main_start_node, m_ossia_startSynchronization->makeTrigger());
+  m_ossia_endSynchronization->onSetup(main_end_node, m_ossia_endSynchronization->makeTrigger());
   m_ossia_startEvent->onSetup(main_start_event, m_ossia_startEvent->makeExpression(), (ossia::time_event::offset_behavior)element.startEvent().offsetBehavior());
   m_ossia_endEvent->onSetup(main_end_event, m_ossia_endEvent->makeExpression(), (ossia::time_event::offset_behavior)element.endEvent().offsetBehavior());
   m_ossia_startState->onSetup(main_start_event);
@@ -104,15 +104,15 @@ void BaseScenarioElement::cleanup()
     m_ossia_startEvent->cleanup();
   if(m_ossia_endEvent)
     m_ossia_endEvent->cleanup();
-  if(m_ossia_startTimeSync)
+  if(m_ossia_startSynchronization)
   {
-    m_ossia_startTimeSync->OSSIATimeSync()->cleanup();
-    m_ossia_startTimeSync->cleanup();
+    m_ossia_startSynchronization->OSSIASynchronization()->cleanup();
+    m_ossia_startSynchronization->cleanup();
   }
-  if(m_ossia_endTimeSync)
+  if(m_ossia_endSynchronization)
   {
-    m_ossia_endTimeSync->OSSIATimeSync()->cleanup();
-    m_ossia_endTimeSync->cleanup();
+    m_ossia_endSynchronization->OSSIASynchronization()->cleanup();
+    m_ossia_endSynchronization->cleanup();
   }
 
   m_ossia_interval.reset();
@@ -120,8 +120,8 @@ void BaseScenarioElement::cleanup()
   m_ossia_endState.reset();
   m_ossia_startEvent.reset();
   m_ossia_endEvent.reset();
-  m_ossia_startTimeSync.reset();
-  m_ossia_endTimeSync.reset();
+  m_ossia_startSynchronization.reset();
+  m_ossia_endSynchronization.reset();
 }
 
 IntervalComponent& BaseScenarioElement::baseInterval() const
@@ -129,14 +129,14 @@ IntervalComponent& BaseScenarioElement::baseInterval() const
   return *m_ossia_interval;
 }
 
-TimeSyncComponent& BaseScenarioElement::startTimeSync() const
+SynchronizationComponent& BaseScenarioElement::startSynchronization() const
 {
-  return *m_ossia_startTimeSync;
+  return *m_ossia_startSynchronization;
 }
 
-TimeSyncComponent& BaseScenarioElement::endTimeSync() const
+SynchronizationComponent& BaseScenarioElement::endSynchronization() const
 {
-  return *m_ossia_endTimeSync;
+  return *m_ossia_endSynchronization;
 }
 
 EventComponent& BaseScenarioElement::startEvent() const
@@ -168,7 +168,7 @@ BaseScenarioRefContainer::BaseScenarioRefContainer(
     , m_endState{s.state(interval.endState())}
     , m_startEvent{s.event(m_startState.eventId())}
     , m_endEvent{s.event(m_endState.eventId())}
-    , m_startNode{s.timeSync(m_startEvent.timeSync())}
-    , m_endNode{s.timeSync(m_endEvent.timeSync())}
+    , m_startNode{s.synchronization(m_startEvent.synchronization())}
+    , m_endNode{s.synchronization(m_endEvent.synchronization())}
 {
 }

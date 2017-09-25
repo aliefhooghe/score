@@ -13,7 +13,7 @@ namespace Scenario
 {
 namespace Command
 {
-// Rigid interval == end TimeSync has a trigger
+// Rigid interval == end Synchronization has a trigger
 
 SetRigidity::SetRigidity(const IntervalModel& interval, bool rigid)
     : m_path{interval}, m_rigidity{rigid}

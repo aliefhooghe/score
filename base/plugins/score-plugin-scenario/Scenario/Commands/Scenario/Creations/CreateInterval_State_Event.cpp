@@ -25,13 +25,13 @@ CreateInterval_State_Event::CreateInterval_State_Event(
     const Scenario::ProcessModel& scenario,
     Id<StateModel>
         startState,
-    Id<TimeSyncModel>
-        endTimeSync,
+    Id<SynchronizationModel>
+        endSynchronization,
     double endStateY)
     : m_newEvent{getStrongId(scenario.events)}
     , m_createdName{RandomNameProvider::generateRandomName()}
     , m_command{scenario, std::move(startState), m_newEvent, endStateY}
-    , m_endTimeSync{std::move(endTimeSync)}
+    , m_endSynchronization{std::move(endSynchronization)}
 {
 }
 
@@ -50,7 +50,7 @@ void CreateInterval_State_Event::redo(const score::DocumentContext& ctx) const
   // Create the end event
   ScenarioCreate<EventModel>::redo(
       m_newEvent,
-      scenar.timeSync(m_endTimeSync),
+      scenar.synchronization(m_endSynchronization),
       {m_command.endStateY(), m_command.endStateY()},
       scenar);
 
@@ -62,13 +62,13 @@ void CreateInterval_State_Event::redo(const score::DocumentContext& ctx) const
 
 void CreateInterval_State_Event::serializeImpl(DataStreamInput& s) const
 {
-  s << m_newEvent << m_createdName << m_command.serialize() << m_endTimeSync;
+  s << m_newEvent << m_createdName << m_command.serialize() << m_endSynchronization;
 }
 
 void CreateInterval_State_Event::deserializeImpl(DataStreamOutput& s)
 {
   QByteArray b;
-  s >> m_newEvent >> m_createdName >> b >> m_endTimeSync;
+  s >> m_newEvent >> m_createdName >> b >> m_endSynchronization;
 
   m_command.deserialize(b);
 }

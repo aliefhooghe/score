@@ -10,7 +10,7 @@
 #include <Scenario/Commands/Scenario/Creations/CreateInterval.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateInterval_State.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event.hpp>
-#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_TimeSync.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_Synchronization.hpp>
 #include <Scenario/Commands/Scenario/Creations/CreateSequence.hpp>
 
 #include <Explorer/DocumentPlugin/DeviceDocumentPlugin.hpp>
@@ -45,14 +45,14 @@ public:
 
   QVector<Id<StateModel>> createdStates;
   QVector<Id<EventModel>> createdEvents;
-  QVector<Id<TimeSyncModel>> createdTimeSyncs;
+  QVector<Id<SynchronizationModel>> createdSynchronizations;
   QVector<Id<IntervalModel>> createdIntervals;
 
   void clearCreatedIds()
   {
     createdEvents.clear();
     createdIntervals.clear();
-    createdTimeSyncs.clear();
+    createdSynchronizations.clear();
     createdStates.clear();
   }
 };
@@ -116,17 +116,17 @@ protected:
     }
   }
 
-  void createToTimeSync_base(const Id<StateModel>& originalState)
+  void createToSynchronization_base(const Id<StateModel>& originalState)
   {
-    if (this->hoveredTimeSync)
+    if (this->hoveredSynchronization)
     {
       // make sure the hovered corresponding timesync dont have a date prior to
       // original state date
       if (getDate(m_parentSM.model(), originalState)
-          < getDate(m_parentSM.model(), *this->hoveredTimeSync))
+          < getDate(m_parentSM.model(), *this->hoveredSynchronization))
       {
         auto cmd = new Scenario::Command::CreateInterval_State_Event{
-            this->m_scenario, originalState, *this->hoveredTimeSync,
+            this->m_scenario, originalState, *this->hoveredSynchronization,
             this->currentPoint.y};
 
         m_dispatcher.submitCommand(cmd);
@@ -142,7 +142,7 @@ protected:
   {
     if (!m_parentSM.editionSettings().sequence())
     {
-      auto cmd = new Scenario::Command::CreateInterval_State_Event_TimeSync{
+      auto cmd = new Scenario::Command::CreateInterval_State_Event_Synchronization{
           this->m_scenario,
           originalState, // Put there in createInitialState
           this->currentPoint.date, this->currentPoint.y};
@@ -151,7 +151,7 @@ protected:
 
       this->createdStates.append(cmd->createdState());
       this->createdEvents.append(cmd->createdEvent());
-      this->createdTimeSyncs.append(cmd->createdTimeSync());
+      this->createdSynchronizations.append(cmd->createdSynchronization());
       this->createdIntervals.append(cmd->createdInterval());
     }
     else
@@ -169,7 +169,7 @@ protected:
 
       this->createdStates.append(cmd->createdState());
       this->createdEvents.append(cmd->createdEvent());
-      this->createdTimeSyncs.append(cmd->createdTimeSync());
+      this->createdSynchronizations.append(cmd->createdSynchronization());
       this->createdIntervals.append(cmd->createdInterval());
     }
   }

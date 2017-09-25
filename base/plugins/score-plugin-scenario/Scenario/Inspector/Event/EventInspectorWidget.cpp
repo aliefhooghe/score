@@ -2,14 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include <Scenario/Commands/Event/SetCondition.hpp>
-#include <Scenario/Commands/TimeSync/TriggerCommandFactory/TriggerCommandFactoryList.hpp>
+#include <Scenario/Commands/Synchronization/TriggerCommandFactory/TriggerCommandFactoryList.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Inspector/Expression/ExpressionEditorWidget.hpp>
 #include <Scenario/Inspector/MetadataWidget.hpp>
 #include <Scenario/Inspector/SelectionButton.hpp>
-#include <Scenario/Inspector/TimeSync/TriggerInspectorWidget.hpp>
+#include <Scenario/Inspector/Synchronization/TriggerInspectorWidget.hpp>
 #include <State/Expression.hpp>
 #include <score/widgets/Separator.hpp>
 
@@ -81,11 +81,11 @@ EventInspectorWidget::EventInspectorWidget(
   auto infoWidg = new QWidget;
   auto infoLay = new score::MarginLess<QFormLayout>{infoWidg};
 
-  // timeSync
-  auto timeSync = m_model.timeSync();
+  // synchronization
+  auto synchronization = m_model.synchronization();
   auto tnBtn = SelectionButton::make(
-      tr("Parent TimeSync"),
-      &scenar->timeSync(timeSync),
+      tr("Parent Synchronization"),
+      &scenar->synchronization(synchronization),
       m_selectionDispatcher,
       infoWidg);
 

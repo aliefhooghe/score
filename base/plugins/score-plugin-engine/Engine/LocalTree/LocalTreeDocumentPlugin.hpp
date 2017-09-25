@@ -18,7 +18,7 @@ namespace Scenario
 class ProcessModel;
 class IntervalModel;
 class EventModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class StateModel;
 }
 namespace Engine

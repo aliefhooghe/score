@@ -25,7 +25,7 @@ namespace Execution
 {
 class EventComponent;
 class StateComponent;
-class TimeSyncComponent;
+class SynchronizationComponent;
 }
 }
 namespace Scenario
@@ -63,8 +63,8 @@ private:
 private:
   Engine::Execution::IntervalComponent* m_ossia_interval{};
 
-  Engine::Execution::TimeSyncComponent* m_ossia_startTimeSync{};
-  Engine::Execution::TimeSyncComponent* m_ossia_endTimeSync{};
+  Engine::Execution::SynchronizationComponent* m_ossia_startSynchronization{};
+  Engine::Execution::SynchronizationComponent* m_ossia_endSynchronization{};
 
   Engine::Execution::EventComponent* m_ossia_startEvent{};
   Engine::Execution::EventComponent* m_ossia_endEvent{};

@@ -35,7 +35,7 @@
  * * Model-view-presenter classes for the major score concepts :
  *   * Scenario::IntervalModel,
  *   * Scenario::EventModel,
- *   * Scenario::TimeSyncModel,
+ *   * Scenario::SynchronizationModel,
  *   * Scenario::StateModel,
  *   * Scenario::RackModel,
  *   * Scenario::SlotModel

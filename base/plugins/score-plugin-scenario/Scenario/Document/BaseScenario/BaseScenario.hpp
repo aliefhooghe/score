@@ -14,7 +14,7 @@ class QObject;
 namespace Scenario
 {
 class IntervalModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class BaseScenario final : public IdentifiedObject<BaseScenario>,
                            public BaseScenarioContainer
 {
@@ -43,8 +43,8 @@ public:
   using QObject::event;
 };
 
-const QVector<Id<IntervalModel>> intervalsBeforeTimeSync(
-    const BaseScenario&, const Id<TimeSyncModel>& timeSyncId);
+const QVector<Id<IntervalModel>> intervalsBeforeSynchronization(
+    const BaseScenario&, const Id<SynchronizationModel>& synchronizationId);
 }
 
 DEFAULT_MODEL_METADATA(Scenario::BaseScenario, "Base Scenario")

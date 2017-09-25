@@ -15,7 +15,7 @@ namespace Scenario
 class ProcessModel;
 class EventModel;
 class StateModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class IntervalModel;
 namespace Command
 {
@@ -30,7 +30,7 @@ public:
   CreateInterval_State_Event(
       const Scenario::ProcessModel& scenario,
       Id<StateModel> startState,
-      Id<TimeSyncModel> endTimeSync,
+      Id<SynchronizationModel> endSynchronization,
       double endStateY);
 
   const Path<Scenario::ProcessModel>& scenarioPath() const
@@ -76,7 +76,7 @@ private:
 
   CreateInterval_State m_command;
 
-  Id<TimeSyncModel> m_endTimeSync;
+  Id<SynchronizationModel> m_endSynchronization;
 };
 }
 }

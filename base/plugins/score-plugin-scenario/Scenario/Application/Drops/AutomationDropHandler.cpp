@@ -6,7 +6,7 @@
 #include <Scenario/Commands/Cohesion/CreateCurves.hpp>
 #include <Scenario/Commands/Interval/AddProcessToInterval.hpp>
 #include <Scenario/Commands/Interval/Rack/Slot/AddLayerModelToSlot.hpp>
-#include <Scenario/Commands/Scenario/Creations/CreateTimeSync_Event_State.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateSynchronization_Event_State.hpp>
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Process/Temporal/TemporalScenarioPresenter.hpp>
 #include <score/command/Dispatchers/CommandDispatcher.hpp>
@@ -36,13 +36,13 @@ bool DropProcessInScenario::drop(
     TimeVal t = std::chrono::seconds{5};
 
     // Create the beginning
-    auto start_cmd = new Scenario::Command::CreateTimeSync_Event_State{
+    auto start_cmd = new Scenario::Command::CreateSynchronization_Event_State{
         scenar, pt.date, pt.y};
     m.submitCommand(start_cmd);
 
     // Create a box with the duration of the longest song
     auto box_cmd
-        = new Scenario::Command::CreateInterval_State_Event_TimeSync{
+        = new Scenario::Command::CreateInterval_State_Event_Synchronization{
             scenar, start_cmd->createdState(), pt.date + t, pt.y};
     m.submitCommand(box_cmd);
     auto& interval = scenar.interval(box_cmd->createdInterval());

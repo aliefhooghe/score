@@ -6,7 +6,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Interval/Rack/RackModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 
 #include <Scenario/Commands/Interval/AddProcessToInterval.hpp>
@@ -47,7 +47,7 @@ private slots:
     auto int_0_id = getStrongId(s0->intervals());
     auto ev_0_id = getStrongId(s0->events());
     auto fv_0_id = Id<IntervalViewModel>{234};
-    auto tb_0_id = getStrongId(s0->timeSyncs());
+    auto tb_0_id = getStrongId(s0->synchronizations());
     StandardCreationPolicy::createIntervalAndEndEventFromEvent(
         *s0, s0->startEvent()->id(), std::chrono::milliseconds{34}, 10,
         int_0_id, fv_0_id, ev_0_id);

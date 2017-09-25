@@ -4,7 +4,7 @@
 
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 
 #include <Scenario/Commands/Scenario/Deletions/ClearInterval.hpp>
@@ -38,7 +38,7 @@ public:
          it != propsToUpdate.timesyncs.cend();
          ++it)
     {
-      auto& curTimenodeToUpdate = scenario.timeSync(it.key());
+      auto& curTimenodeToUpdate = scenario.synchronization(it.key());
       auto& curTimenodePropertiesToUpdate = it.value();
 
       curTimenodeToUpdate.setDate(curTimenodePropertiesToUpdate.newDate);
@@ -106,7 +106,7 @@ public:
          it != propsToUpdate.timesyncs.cend();
          ++it)
     {
-      auto& curTimenodeToUpdate = scenario.timeSync(it.key());
+      auto& curTimenodeToUpdate = scenario.synchronization(it.key());
       auto& curTimenodePropertiesToUpdate = it.value();
 
       curTimenodeToUpdate.setDate(curTimenodePropertiesToUpdate.oldDate);

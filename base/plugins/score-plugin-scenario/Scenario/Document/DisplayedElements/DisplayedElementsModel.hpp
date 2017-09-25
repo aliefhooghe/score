@@ -8,7 +8,7 @@ namespace Scenario
 class IntervalModel;
 class EventModel;
 class StateModel;
-class TimeSyncModel;
+class SynchronizationModel;
 
 class SCORE_PLUGIN_SCENARIO_EXPORT DisplayedElementsModel
 {
@@ -24,8 +24,8 @@ public:
   void setDisplayedElements(DisplayedElementsContainer&&);
   IntervalModel& interval() const;
 
-  const TimeSyncModel& startTimeSync() const;
-  const TimeSyncModel& endTimeSync() const;
+  const SynchronizationModel& startSynchronization() const;
+  const SynchronizationModel& endSynchronization() const;
 
   const EventModel& startEvent() const;
   const EventModel& endEvent() const;

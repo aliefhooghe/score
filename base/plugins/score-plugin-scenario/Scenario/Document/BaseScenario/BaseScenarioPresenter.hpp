@@ -3,8 +3,8 @@
 #include <Scenario/Document/Event/EventPresenter.hpp>
 #include <Scenario/Document/Event/EventView.hpp>
 #include <Scenario/Document/State/StatePresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncPresenter.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncView.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationPresenter.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationView.hpp>
 
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Interval/FullView/FullViewIntervalPresenter.hpp>
@@ -39,8 +39,8 @@ public:
     return {m_startEventPresenter, m_endEventPresenter};
   }
 
-  score::IndirectContainer<std::vector, Scenario::TimeSyncPresenter>
-  getTimeSyncs() const
+  score::IndirectContainer<std::vector, Scenario::SynchronizationPresenter>
+  getSynchronizations() const
   {
     return {m_startNodePresenter, m_endNodePresenter};
   }
@@ -54,12 +54,12 @@ public:
       return *m_endEventPresenter;
     SCORE_ABORT;
   }
-  const Scenario::TimeSyncPresenter&
-  timeSync(const Id<Scenario::TimeSyncModel>& id) const
+  const Scenario::SynchronizationPresenter&
+  synchronization(const Id<Scenario::SynchronizationModel>& id) const
   {
-    if (id == m_model.startTimeSync().id())
+    if (id == m_model.startSynchronization().id())
       return *m_startNodePresenter;
-    else if (id == m_model.endTimeSync().id())
+    else if (id == m_model.endSynchronization().id())
       return *m_endNodePresenter;
     SCORE_ABORT;
   }
@@ -80,7 +80,7 @@ public:
     SCORE_ABORT;
   }
 
-  const Scenario::TimeSyncModel& startTimeSync() const
+  const Scenario::SynchronizationModel& startSynchronization() const
   {
     return m_startNodePresenter->model();
   }
@@ -98,6 +98,6 @@ protected:
   Scenario::StatePresenter* m_endStatePresenter{};
   Scenario::EventPresenter* m_startEventPresenter{};
   Scenario::EventPresenter* m_endEventPresenter{};
-  Scenario::TimeSyncPresenter* m_startNodePresenter{};
-  Scenario::TimeSyncPresenter* m_endNodePresenter{};
+  Scenario::SynchronizationPresenter* m_startNodePresenter{};
+  Scenario::SynchronizationPresenter* m_endNodePresenter{};
 };

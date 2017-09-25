@@ -5,7 +5,7 @@
 #include <Scenario/Palette/Transitions/IntervalTransitions.hpp>
 #include <Scenario/Palette/Transitions/EventTransitions.hpp>
 #include <Scenario/Palette/Transitions/NothingTransitions.hpp>
-#include <Scenario/Palette/Transitions/TimeSyncTransitions.hpp>
+#include <Scenario/Palette/Transitions/SynchronizationTransitions.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 
 #include <QFinalState>
@@ -221,12 +221,12 @@ private:
 };
 
 template <
-    typename MoveTimeSyncCommand_T, // MoveEventMeta
+    typename MoveSynchronizationCommand_T, // MoveEventMeta
     typename Scenario_T, typename ToolPalette_T>
-class MoveTimeSyncState final : public StateBase<Scenario_T>
+class MoveSynchronizationState final : public StateBase<Scenario_T>
 {
 public:
-  MoveTimeSyncState(
+  MoveSynchronizationState(
       const ToolPalette_T& stateMachine,
       const Scenario_T& scenarioPath,
       const score::CommandStackFacade& stack,
@@ -234,7 +234,7 @@ public:
       QState* parent)
       : StateBase<Scenario_T>{scenarioPath, parent}, m_dispatcher{stack}
   {
-    this->setObjectName("MoveTimeSyncState");
+    this->setObjectName("MoveSynchronizationState");
     using namespace Scenario::Command;
     auto finalState = new QFinalState{this};
 
@@ -258,13 +258,13 @@ public:
 
       // What happens in each state.
       QObject::connect(pressed, &QState::entered, [&]() {
-        if (!this->clickedTimeSync)
+        if (!this->clickedSynchronization)
           return;
 
         auto& scenar = stateMachine.model();
 
         auto prev_csts = previousIntervals(
-            scenar.timeSync(*this->clickedTimeSync), scenar);
+            scenar.synchronization(*this->clickedSynchronization), scenar);
         if (!prev_csts.empty())
         {
           // We find the one that starts the latest.
@@ -285,12 +285,12 @@ public:
       });
 
       QObject::connect(moving, &QState::entered, [&]() {
-        if (!this->clickedTimeSync)
+        if (!this->clickedSynchronization)
           return;
 
         // Get the 1st event on the timesync.
         auto& scenar = stateMachine.model();
-        auto& tn = scenar.timeSync(*this->clickedTimeSync);
+        auto& tn = scenar.synchronization(*this->clickedSynchronization);
         const auto& ev_id = tn.events().first();
         auto date = this->currentPoint.date;
 
@@ -328,7 +328,7 @@ public:
     this->setInitialState(mainState);
   }
 
-  SingleOngoingCommandDispatcher<MoveTimeSyncCommand_T> m_dispatcher;
+  SingleOngoingCommandDispatcher<MoveSynchronizationCommand_T> m_dispatcher;
   optional<TimeVal> m_pressedPrevious;
 };
 }

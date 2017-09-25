@@ -10,7 +10,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <Scenario/Tools/dataStructures.hpp>
@@ -26,7 +26,7 @@ namespace Scenario
 {
 void GoodOldDisplacementPolicy::computeDisplacement(
     Scenario::ProcessModel& scenario,
-    const QVector<Id<TimeSyncModel>>& draggedElements,
+    const QVector<Id<SynchronizationModel>>& draggedElements,
     const TimeVal& deltaTime,
     ElementsProperties& elementsProperties)
 {
@@ -40,25 +40,25 @@ void GoodOldDisplacementPolicy::computeDisplacement(
   }
   else
   {
-    const Id<TimeSyncModel>& firstTimeSyncMovedId = draggedElements.at(0);
-    std::vector<Id<TimeSyncModel>> timeSyncsToTranslate;
+    const Id<SynchronizationModel>& firstSynchronizationMovedId = draggedElements.at(0);
+    std::vector<Id<SynchronizationModel>> synchronizationsToTranslate;
 
-    GoodOldDisplacementPolicy::getRelatedTimeSyncs(
-        scenario, firstTimeSyncMovedId, timeSyncsToTranslate);
+    GoodOldDisplacementPolicy::getRelatedSynchronizations(
+        scenario, firstSynchronizationMovedId, synchronizationsToTranslate);
 
     // put each concerned timesync in modified elements and compute new values
-    for (const auto& curTimeSyncId : timeSyncsToTranslate)
+    for (const auto& curSynchronizationId : synchronizationsToTranslate)
     {
-      auto& curTimeSync = scenario.timeSyncs.at(curTimeSyncId);
+      auto& curSynchronization = scenario.synchronizations.at(curSynchronizationId);
 
       // if timesync NOT already in element properties, create new element
       // properties and set the old date
-      auto tn_it = elementsProperties.timesyncs.find(curTimeSyncId);
+      auto tn_it = elementsProperties.timesyncs.find(curSynchronizationId);
       if (tn_it == elementsProperties.timesyncs.end())
       {
         TimenodeProperties t;
-        t.oldDate = curTimeSync.date();
-        tn_it = elementsProperties.timesyncs.emplace(curTimeSyncId, std::move(t)).first;
+        t.oldDate = curSynchronization.date();
+        tn_it = elementsProperties.timesyncs.emplace(curSynchronizationId, std::move(t)).first;
       }
 
       // put the new date
@@ -67,12 +67,12 @@ void GoodOldDisplacementPolicy::computeDisplacement(
     }
 
     // Make a list of the intervals that need to be resized
-    for (const auto& curTimeSyncId : timeSyncsToTranslate)
+    for (const auto& curSynchronizationId : synchronizationsToTranslate)
     {
-      auto& curTimeSync = scenario.timeSync(curTimeSyncId);
+      auto& curSynchronization = scenario.synchronization(curSynchronizationId);
 
       // each previous interval
-      for (const auto& ev_id : curTimeSync.events())
+      for (const auto& ev_id : curSynchronization.events())
       {
         const auto& ev = scenario.event(ev_id);
         for (const auto& st_id : ev.states())
@@ -99,7 +99,7 @@ void GoodOldDisplacementPolicy::computeDisplacement(
 
             auto& curIntervalStartEvent
                 = Scenario::startEvent(curInterval, scenario);
-            auto& startTnodeId = curIntervalStartEvent.timeSync();
+            auto& startTnodeId = curIntervalStartEvent.synchronization();
 
             // compute default duration
             TimeVal startDate;
@@ -116,7 +116,7 @@ void GoodOldDisplacementPolicy::computeDisplacement(
             }
 
             const auto& endDate
-                = elementsProperties.timesyncs[curTimeSyncId].newDate;
+                = elementsProperties.timesyncs[curSynchronizationId].newDate;
 
             TimeVal newDefaultDuration = endDate - startDate;
             TimeVal deltaBounds = newDefaultDuration
@@ -134,29 +134,29 @@ void GoodOldDisplacementPolicy::computeDisplacement(
   }
 }
 
-void GoodOldDisplacementPolicy::getRelatedTimeSyncs(
+void GoodOldDisplacementPolicy::getRelatedSynchronizations(
     Scenario::ProcessModel& scenario,
-    const Id<TimeSyncModel>& firstTimeSyncMovedId,
-    std::vector<Id<TimeSyncModel>>& translatedTimeSyncs)
+    const Id<SynchronizationModel>& firstSynchronizationMovedId,
+    std::vector<Id<SynchronizationModel>>& translatedSynchronizations)
 {
-  if (firstTimeSyncMovedId.val() == Scenario::startId_val())
+  if (firstSynchronizationMovedId.val() == Scenario::startId_val())
     return;
 
   auto it = std::find(
-      translatedTimeSyncs.begin(),
-      translatedTimeSyncs.end(),
-      firstTimeSyncMovedId);
-  if (it == translatedTimeSyncs.end())
+      translatedSynchronizations.begin(),
+      translatedSynchronizations.end(),
+      firstSynchronizationMovedId);
+  if (it == translatedSynchronizations.end())
   {
-    translatedTimeSyncs.push_back(firstTimeSyncMovedId);
+    translatedSynchronizations.push_back(firstSynchronizationMovedId);
   }
-  else // timeSync already moved
+  else // synchronization already moved
   {
     return;
   }
 
-  const auto& cur_timeSync = scenario.timeSyncs.at(firstTimeSyncMovedId);
-  for (const auto& cur_eventId : cur_timeSync.events())
+  const auto& cur_synchronization = scenario.synchronizations.at(firstSynchronizationMovedId);
+  for (const auto& cur_eventId : cur_synchronization.events())
   {
     const auto& cur_event = scenario.events.at(cur_eventId);
 
@@ -168,8 +168,8 @@ void GoodOldDisplacementPolicy::getRelatedTimeSyncs(
         const auto& endStateId = scenario.intervals.at(*cons).endState();
         const auto& endTnId
             = scenario.events.at(scenario.state(endStateId).eventId())
-                  .timeSync();
-        getRelatedTimeSyncs(scenario, endTnId, translatedTimeSyncs);
+                  .synchronization();
+        getRelatedSynchronizations(scenario, endTnId, translatedSynchronizations);
       }
     }
   }

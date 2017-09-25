@@ -4,7 +4,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <score/document/DocumentInterface.hpp>
 #include <score/tools/std/Optional.hpp>
 #include <tuple>
@@ -51,10 +51,10 @@ bool BaseScenario::focused() const
   return res;
 }
 
-const QVector<Id<IntervalModel>> intervalsBeforeTimeSync(
-    const BaseScenario& scen, const Id<TimeSyncModel>& timeSyncId)
+const QVector<Id<IntervalModel>> intervalsBeforeSynchronization(
+    const BaseScenario& scen, const Id<SynchronizationModel>& synchronizationId)
 {
-  if (timeSyncId == scen.endTimeSync().id())
+  if (synchronizationId == scen.endSynchronization().id())
   {
     return {scen.interval().id()};
   }

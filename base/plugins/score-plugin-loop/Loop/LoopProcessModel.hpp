@@ -17,7 +17,7 @@ class JSONObject;
 
 namespace Scenario
 {
-class TimeSyncModel;
+class SynchronizationModel;
 class IntervalModel;
 }
 
@@ -66,9 +66,9 @@ public:
 };
 
 SCORE_PLUGIN_LOOP_EXPORT const QVector<Id<Scenario::IntervalModel>>
-intervalsBeforeTimeSync(
+intervalsBeforeSynchronization(
     const Loop::ProcessModel& scen,
-    const Id<Scenario::TimeSyncModel>& timeSyncId);
+    const Id<Scenario::SynchronizationModel>& synchronizationId);
 }
 namespace Scenario
 {
@@ -87,11 +87,11 @@ struct ElementTraits<Loop::ProcessModel, Scenario::EventModel>
           const Scenario::BaseScenarioContainer&)>(&Scenario::events);
 };
 template <>
-struct ElementTraits<Loop::ProcessModel, Scenario::TimeSyncModel>
+struct ElementTraits<Loop::ProcessModel, Scenario::SynchronizationModel>
 {
   static const constexpr auto accessor
-      = static_cast<score::IndirectArray<Scenario::TimeSyncModel, 2> (*)(
-          const Scenario::BaseScenarioContainer&)>(&Scenario::timeSyncs);
+      = static_cast<score::IndirectArray<Scenario::SynchronizationModel, 2> (*)(
+          const Scenario::BaseScenarioContainer&)>(&Scenario::synchronizations);
 };
 template <>
 struct ElementTraits<Loop::ProcessModel, Scenario::StateModel>

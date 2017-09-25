@@ -21,7 +21,7 @@ namespace Scenario
 {
 class StateModel;
 class ScenarioInterface;
-class TimeSyncModel;
+class SynchronizationModel;
 
 class SCORE_PLUGIN_SCENARIO_EXPORT EventModel final
     : public score::Entity<EventModel>
@@ -40,7 +40,7 @@ public:
   /** The class **/
   EventModel(
       const Id<EventModel>&,
-      const Id<TimeSyncModel>& timesync,
+      const Id<SynchronizationModel>& timesync,
       const VerticalExtent& extent,
       const TimeVal& date,
       QObject* parent);
@@ -55,13 +55,13 @@ public:
   }
 
   // Timenode
-  void changeTimeSync(const Id<TimeSyncModel>& elt)
+  void changeSynchronization(const Id<SynchronizationModel>& elt)
   {
-    m_timeSync = elt;
+    m_synchronization = elt;
   }
-  const auto& timeSync() const
+  const auto& synchronization() const
   {
-    return m_timeSync;
+    return m_synchronization;
   }
 
   // States
@@ -101,7 +101,7 @@ signals:
   void offsetBehaviorChanged(OffsetBehavior);
 
 private:
-  Id<TimeSyncModel> m_timeSync;
+  Id<SynchronizationModel> m_synchronization;
 
   QVector<Id<StateModel>> m_states;
 

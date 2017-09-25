@@ -5,7 +5,7 @@
 #include <Scenario/Document/ScenarioDocument/ScenarioDocumentModel.hpp>
 #include <Scenario/Document/State/ItemModel/MessageItemModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/Accessors.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
 #include <score/model/Component.hpp>
@@ -202,7 +202,7 @@ template <
     typename Scenario_T,
     typename IntervalComponent_T,
     typename EventComponent_T,
-    typename TimeSyncComponent_T,
+    typename SynchronizationComponent_T,
     typename StateComponent_T,
     bool HasOwnership = true>
 class HierarchicalScenarioComponent : public Component_T, public Nano::Observer
@@ -220,11 +220,11 @@ public:
     Scenario::EventModel& element;
     EventComponent_T& component;
   };
-  struct TimeSyncPair
+  struct SynchronizationPair
   {
-    using element_t = Scenario::TimeSyncModel;
-    Scenario::TimeSyncModel& element;
-    TimeSyncComponent_T& component;
+    using element_t = Scenario::SynchronizationModel;
+    Scenario::SynchronizationModel& element;
+    SynchronizationComponent_T& component;
   };
   struct StatePair
   {
@@ -252,7 +252,7 @@ public:
   //! Do not forget to call this when using the lazy constructor.
   void init()
   {
-    setup<Scenario::TimeSyncModel>();
+    setup<Scenario::SynchronizationModel>();
     setup<Scenario::EventModel>();
     setup<Scenario::StateModel>();
     setup<Scenario::IntervalModel>();
@@ -270,9 +270,9 @@ public:
   {
     return m_states;
   }
-  const std::list<TimeSyncPair>& timeSyncs_pairs() const
+  const std::list<SynchronizationPair>& synchronizations_pairs() const
   {
-    return m_timeSyncs;
+    return m_synchronizations;
   }
 
   void clear()
@@ -283,13 +283,13 @@ public:
       do_cleanup(element);
     for (auto element : m_events)
       do_cleanup(element);
-    for (auto element : m_timeSyncs)
+    for (auto element : m_synchronizations)
       do_cleanup(element);
 
     m_intervals.clear();
     m_states.clear();
     m_events.clear();
-    m_timeSyncs.clear();
+    m_synchronizations.clear();
   }
 
   ~HierarchicalScenarioComponent()
@@ -408,7 +408,7 @@ private:
     }
   }
 
-  std::list<TimeSyncPair> m_timeSyncs;
+  std::list<SynchronizationPair> m_synchronizations;
   std::list<EventPair> m_events;
   std::list<StatePair> m_states;
   std::list<IntervalPair> m_intervals;
@@ -434,14 +434,14 @@ private:
         ElementTraits<Scenario_T, Scenario::EventModel>::accessor;
   };
   template <bool dummy>
-  struct MatchingComponent<Scenario::TimeSyncModel, dummy>
+  struct MatchingComponent<Scenario::SynchronizationModel, dummy>
   {
-    using type = TimeSyncComponent_T;
-    using pair_type = TimeSyncPair;
+    using type = SynchronizationComponent_T;
+    using pair_type = SynchronizationPair;
     static const constexpr auto local_container
-        = &HierarchicalScenarioComponent::m_timeSyncs;
+        = &HierarchicalScenarioComponent::m_synchronizations;
     static const constexpr auto scenario_container = Scenario::
-        ElementTraits<Scenario_T, Scenario::TimeSyncModel>::accessor;
+        ElementTraits<Scenario_T, Scenario::SynchronizationModel>::accessor;
   };
   template <bool dummy>
   struct MatchingComponent<Scenario::StateModel, dummy>
@@ -461,7 +461,7 @@ template <
     typename BaseScenario_T,
     typename IntervalComponent_T,
     typename EventComponent_T,
-    typename TimeSyncComponent_T,
+    typename SynchronizationComponent_T,
     typename StateComponent_T>
 class HierarchicalBaseScenario : public Component_T, public Nano::Observer
 {
@@ -478,11 +478,11 @@ public:
     Scenario::EventModel& element;
     EventComponent_T& component;
   };
-  struct TimeSyncPair
+  struct SynchronizationPair
   {
-    using element_t = Scenario::TimeSyncModel;
-    Scenario::TimeSyncModel& element;
-    TimeSyncComponent_T& component;
+    using element_t = Scenario::SynchronizationModel;
+    Scenario::SynchronizationModel& element;
+    SynchronizationComponent_T& component;
   };
   struct StatePair
   {
@@ -494,8 +494,8 @@ public:
   template <typename... Args>
   HierarchicalBaseScenario(Args&&... args)
       : Component_T{std::forward<Args>(args)...}
-      , m_timeSyncs{setup<Scenario::TimeSyncModel>(0),
-                    setup<Scenario::TimeSyncModel>(1)}
+      , m_synchronizations{setup<Scenario::SynchronizationModel>(0),
+                    setup<Scenario::SynchronizationModel>(1)}
       , m_events{setup<Scenario::EventModel>(0),
                  setup<Scenario::EventModel>(1)}
       , m_states{setup<Scenario::StateModel>(0),
@@ -516,9 +516,9 @@ public:
   {
     return m_states;
   }
-  const auto& timeSyncs() const
+  const auto& synchronizations() const
   {
-    return m_timeSyncs;
+    return m_synchronizations;
   }
 
   void clear()
@@ -529,13 +529,13 @@ public:
       cleanup(element);
     for (auto element : m_events)
       cleanup(element);
-    for (auto element : m_timeSyncs)
+    for (auto element : m_synchronizations)
       cleanup(element);
 
     m_intervals.clear();
     m_states.clear();
     m_events.clear();
-    m_timeSyncs.clear();
+    m_synchronizations.clear();
   }
 
   ~HierarchicalBaseScenario()
@@ -591,7 +591,7 @@ private:
     }
   }
 
-  std::list<TimeSyncPair> m_timeSyncs;
+  std::list<SynchronizationPair> m_synchronizations;
   std::list<EventPair> m_events;
   std::list<StatePair> m_states;
   std::list<IntervalPair> m_intervals;
@@ -618,14 +618,14 @@ private:
         ElementTraits<BaseScenario_T, Scenario::EventModel>::accessor;
   };
   template <bool dummy>
-  struct MatchingComponent<Scenario::TimeSyncModel, dummy>
+  struct MatchingComponent<Scenario::SynchronizationModel, dummy>
   {
-    using type = TimeSyncComponent_T;
-    using pair_type = TimeSyncPair;
+    using type = SynchronizationComponent_T;
+    using pair_type = SynchronizationPair;
     static const constexpr auto local_container
-        = &HierarchicalBaseScenario::m_timeSyncs;
+        = &HierarchicalBaseScenario::m_synchronizations;
     static const constexpr auto scenario_container = Scenario::
-        ElementTraits<BaseScenario_T, Scenario::TimeSyncModel>::
+        ElementTraits<BaseScenario_T, Scenario::SynchronizationModel>::
             accessor;
   };
   template <bool dummy>

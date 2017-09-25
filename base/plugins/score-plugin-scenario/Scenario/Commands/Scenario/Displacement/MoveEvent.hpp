@@ -20,7 +20,7 @@ struct ElementsProperties;
 namespace Scenario
 {
 class EventModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class IntervalModel;
 class ProcessModel;
 namespace Command
@@ -74,7 +74,7 @@ public:
     , m_lock{lock}
   {
     auto& s = const_cast<Scenario::ProcessModel&>(scenario);
-    DisplacementPolicy::init(s, {scenario.event(eventId).timeSync()});
+    DisplacementPolicy::init(s, {scenario.event(eventId).synchronization()});
     // we need to compute the new time delta and store this initial event id
     // for recalculate the delta on updates
     // NOTE: in the future in would be better to give directly the delta value
@@ -101,9 +101,9 @@ public:
 
     // NOTICE: multiple event displacement functionnality already available,
     // this is "retro" compatibility
-    QVector<Id<TimeSyncModel>> draggedElements;
+    QVector<Id<SynchronizationModel>> draggedElements;
     draggedElements.push_back(
-        scenario.events.at(eventId).timeSync()); // retrieve corresponding
+        scenario.events.at(eventId).synchronization()); // retrieve corresponding
                                                  // timesync and store it in
                                                  // array
 

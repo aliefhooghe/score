@@ -26,7 +26,7 @@ namespace Scenario
 {
 class MoveIntervalInBaseScenario_StateWrapper;
 class MoveEventInBaseScenario_StateWrapper;
-class MoveTimeSyncInBaseScenario_StateWrapper;
+class MoveSynchronizationInBaseScenario_StateWrapper;
 }
 namespace Loop
 {
@@ -72,7 +72,7 @@ private:
                 Scenario::MoveLeftBraceInScenario_StateWrapper,
                 Scenario::MoveRightBraceInScenario_StateWrapper,
                 Scenario::MoveEventInBaseScenario_StateWrapper,
-                Scenario::MoveTimeSyncInBaseScenario_StateWrapper>
+                Scenario::MoveSynchronizationInBaseScenario_StateWrapper>
           m_state;
 
   ToolPaletteInputDispatcher<Scenario::Tool, ToolPalette, Process::LayerContext, LayerPresenter>
@@ -120,7 +120,7 @@ private:
             Scenario::MoveLeftBraceInScenario_StateWrapper,
             Scenario::MoveRightBraceInScenario_StateWrapper,
             Scenario::MoveEventInBaseScenario_StateWrapper,
-            Scenario::MoveTimeSyncInBaseScenario_StateWrapper>
+            Scenario::MoveSynchronizationInBaseScenario_StateWrapper>
           m_state;
 
   ToolPaletteInputDispatcher<Scenario::Tool, DisplayedElementsToolPalette,

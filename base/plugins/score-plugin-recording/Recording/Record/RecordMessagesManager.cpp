@@ -47,7 +47,7 @@
 #include <qnamespace.h>
 #include <type_traits>
 #include <utility>
-#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_TimeSync.hpp>
+#include <Scenario/Commands/Scenario/Creations/CreateInterval_State_Event_Synchronization.hpp>
 #include <Scenario/Commands/State/AddMessagesToState.hpp>
 namespace Recording
 {
@@ -91,7 +91,7 @@ void MessageRecorder::stop()
     RecordedMessage& val = m_records[i];
 
     // Create a state
-    auto cmd = new Scenario::Command::CreateInterval_State_Event_TimeSync{
+    auto cmd = new Scenario::Command::CreateInterval_State_Event_Synchronization{
                *m_createdProcess,
                startState,
                TimeVal::fromMsecs(val.percentage),

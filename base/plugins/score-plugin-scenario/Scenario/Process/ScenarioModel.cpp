@@ -19,7 +19,7 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/ProcessPolicy.hpp>
 #include <Scenario/Process/ScenarioProcessMetadata.hpp>
 #include <score/document/DocumentContext.hpp>
@@ -41,12 +41,12 @@ ProcessModel::ProcessModel(
           ProcessModel{duration, id,
                        Metadata<ObjectKey_k, Scenario::ProcessModel>::get(),
                        parent}
-    , m_startTimeSyncId{Scenario::startId<TimeSyncModel>()}
+    , m_startSynchronizationId{Scenario::startId<SynchronizationModel>()}
     , m_startEventId{Scenario::startId<EventModel>()}
     , m_startStateId{Scenario::startId<StateModel>()}
 {
-  auto& start_tn = ScenarioCreate<TimeSyncModel>::redo(
-      m_startTimeSyncId, {0., 0.1}, TimeVal::zero(), *this);
+  auto& start_tn = ScenarioCreate<SynchronizationModel>::redo(
+      m_startSynchronizationId, {0., 0.1}, TimeVal::zero(), *this);
 
   auto& start_ev = ScenarioCreate<EventModel>::redo(
       m_startEventId, start_tn, {0., 0.0}, *this);
@@ -66,7 +66,7 @@ ProcessModel::ProcessModel(
           ProcessModel{source, id,
                        Metadata<ObjectKey_k, Scenario::ProcessModel>::get(),
                        parent}
-    , m_startTimeSyncId{source.m_startTimeSyncId}
+    , m_startSynchronizationId{source.m_startSynchronizationId}
     , m_startEventId{source.m_startEventId}
 {
   metadata().setInstanceName(*this);
@@ -79,7 +79,7 @@ ProcessModel::ProcessModel(
     for (const auto& elt : source.*m)
       (this->*m).add(new the_class{elt, elt.id(), this});
   };
-  clone(&ProcessModel::timeSyncs);
+  clone(&ProcessModel::synchronizations);
   clone(&ProcessModel::events);
   clone(&ProcessModel::intervals);
   clone(&ProcessModel::comments);
@@ -111,7 +111,7 @@ void ProcessModel::setDurationAndScale(const TimeVal& newDuration)
 {
   double scale = newDuration / duration();
 
-  for (auto& timesync : timeSyncs)
+  for (auto& timesync : synchronizations)
   {
     timesync.setDate(timesync.date() * scale);
     // Since events will also move we do not need
@@ -229,11 +229,11 @@ void ProcessModel::setSelection(const Selection& s) const
   });
 }
 
-const QVector<Id<IntervalModel>> intervalsBeforeTimeSync(
-    const Scenario::ProcessModel& scenar, const Id<TimeSyncModel>& timeSyncId)
+const QVector<Id<IntervalModel>> intervalsBeforeSynchronization(
+    const Scenario::ProcessModel& scenar, const Id<SynchronizationModel>& synchronizationId)
 {
   QVector<Id<IntervalModel>> cstrs;
-  const auto& tn = scenar.timeSyncs.at(timeSyncId);
+  const auto& tn = scenar.synchronizations.at(synchronizationId);
   for (const auto& ev : tn.events())
   {
     const auto& evM = scenar.events.at(ev);
@@ -387,7 +387,7 @@ bool ProcessModel::contentHasDuration() const
 TimeVal ProcessModel::contentDuration() const
 {
   TimeVal max_tn_pos = TimeVal::zero();
-  for(TimeSyncModel& t : timeSyncs)
+  for(SynchronizationModel& t : synchronizations)
   {
     if(t.date() > max_tn_pos)
       max_tn_pos = t.date();

@@ -14,7 +14,7 @@
 #include <Process/TimeValue.hpp>
 #include <Scenario/Document/BaseScenario/BaseElementContext.hpp>
 #include <Scenario/Document/Interval/IntervalModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Palette/Tools/SmartTool.hpp>
 #include <Scenario/Palette/Tools/States/ScenarioMoveStatesWrapper.hpp>
 #include <Scenario/Process/ScenarioModel.hpp>
@@ -32,7 +32,7 @@ Scenario::Point
 ScenarioDisplayedElementsToolPalette::ScenePointToScenarioPoint(QPointF point)
 {
   return {TimeVal::fromMsecs(point.x() * m_presenter.zoomRatio())
-              + m_presenter.presenters().startTimeSync().date(),
+              + m_presenter.presenters().startSynchronization().date(),
           0};
 }
 

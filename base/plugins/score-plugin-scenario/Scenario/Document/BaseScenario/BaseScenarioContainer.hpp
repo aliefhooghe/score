@@ -18,7 +18,7 @@ namespace Scenario
 class IntervalModel;
 class EventModel;
 class StateModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class SCORE_PLUGIN_SCENARIO_EXPORT BaseScenarioContainer
     : public ScenarioInterface
 {
@@ -51,7 +51,7 @@ public:
   {
     return {m_startEvent, m_endEvent};
   }
-  ElementContainer<TimeSyncModel> getTimeSyncs() const final override
+  ElementContainer<SynchronizationModel> getSynchronizations() const final override
   {
     return {m_startNode, m_endNode};
   }
@@ -61,8 +61,8 @@ public:
 
   EventModel* findEvent(const Id<EventModel>& id) const final override;
 
-  TimeSyncModel*
-  findTimeSync(const Id<TimeSyncModel>& id) const final override;
+  SynchronizationModel*
+  findSynchronization(const Id<SynchronizationModel>& id) const final override;
 
   StateModel* findState(const Id<StateModel>& id) const final override;
 
@@ -71,14 +71,14 @@ public:
 
   EventModel& event(const Id<EventModel>& id) const final override;
 
-  TimeSyncModel& timeSync(const Id<TimeSyncModel>& id) const final override;
+  SynchronizationModel& synchronization(const Id<SynchronizationModel>& id) const final override;
 
   StateModel& state(const Id<StateModel>& id) const final override;
 
   IntervalModel& interval() const;
 
-  TimeSyncModel& startTimeSync() const final override;
-  TimeSyncModel& endTimeSync() const;
+  SynchronizationModel& startSynchronization() const final override;
+  SynchronizationModel& endSynchronization() const;
 
   EventModel& startEvent() const;
   EventModel& endEvent() const;
@@ -98,14 +98,14 @@ public:
   {
     return {m_startState, m_endState};
   }
-  score::IndirectArray<TimeSyncModel, 2> timeSyncs() const
+  score::IndirectArray<SynchronizationModel, 2> synchronizations() const
   {
     return {m_startNode, m_endNode};
   }
 
 protected:
-  TimeSyncModel* m_startNode{};
-  TimeSyncModel* m_endNode{};
+  SynchronizationModel* m_startNode{};
+  SynchronizationModel* m_endNode{};
 
   EventModel* m_startEvent{};
   EventModel* m_endEvent{};
@@ -135,9 +135,9 @@ inline auto events(const BaseScenarioContainer& scenar)
 {
   return scenar.events();
 }
-inline auto timeSyncs(const BaseScenarioContainer& scenar)
+inline auto synchronizations(const BaseScenarioContainer& scenar)
 {
-  return scenar.timeSyncs();
+  return scenar.synchronizations();
 }
 inline auto states(const BaseScenarioContainer& scenar)
 {
@@ -159,11 +159,11 @@ struct ElementTraits<BaseScenarioContainer, EventModel>
           const BaseScenarioContainer&)>(&events);
 };
 template <>
-struct ElementTraits<BaseScenarioContainer, TimeSyncModel>
+struct ElementTraits<BaseScenarioContainer, SynchronizationModel>
 {
   static const constexpr auto accessor
-      = static_cast<score::IndirectArray<TimeSyncModel, 2> (*)(
-          const BaseScenarioContainer&)>(&timeSyncs);
+      = static_cast<score::IndirectArray<SynchronizationModel, 2> (*)(
+          const BaseScenarioContainer&)>(&synchronizations);
 };
 template <>
 struct ElementTraits<BaseScenarioContainer, StateModel>

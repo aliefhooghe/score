@@ -5,7 +5,7 @@
 
 #include <Scenario/Document/BaseScenario/BaseScenario.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 #include <Scenario/Process/Algorithms/ProcessPolicy.hpp>
 #include <Scenario/Process/Algorithms/StandardDisplacementPolicy.hpp>
 #include <Scenario/Tools/dataStructures.hpp>
@@ -35,7 +35,7 @@ private:
       ScaleFun&& scaleMethod)
   {
     scenar.endEvent().setDate(newDuration);
-    scenar.endTimeSync().setDate(newDuration);
+    scenar.endSynchronization().setDate(newDuration);
 
     auto& interval = scenar.interval();
     IntervalDurations::Algorithms::changeAllDurations(

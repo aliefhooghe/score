@@ -5,7 +5,7 @@
 #include <score/command/CommandStackFacade.hpp>
 #include <score/command/Command.hpp>
 
-#include "CreateInterval_State_Event_TimeSync.hpp"
+#include "CreateInterval_State_Event_Synchronization.hpp"
 #include <Scenario/Commands/ScenarioCommandFactory.hpp>
 #include <score/model/path/Path.hpp>
 #include <score/model/Identifier.hpp>
@@ -18,7 +18,7 @@ namespace Scenario
 class EventModel;
 class IntervalModel;
 class StateModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class ProcessModel;
 namespace Command
 {
@@ -56,16 +56,16 @@ public:
     return m_newEvent;
   }
 
-  const Id<TimeSyncModel>& createdTimeSync() const
+  const Id<SynchronizationModel>& createdSynchronization() const
   {
-    return m_newTimeSync;
+    return m_newSynchronization;
   }
 
 private:
   Id<IntervalModel> m_newInterval;
   Id<StateModel> m_newState;
   Id<EventModel> m_newEvent;
-  Id<TimeSyncModel> m_newTimeSync;
+  Id<SynchronizationModel> m_newSynchronization;
 };
 
 class CreateSequenceProcesses final : public score::Command

@@ -8,7 +8,7 @@ namespace Scenario
  * @brief The VerticalExtent struct
  *
  * Used for "vertical" elements,
- * like TimeSync and intervals.
+ * like Synchronization and intervals.
  *
  * The value is currently in percentage.
  * TODO assess if it would be better to have it in absolute

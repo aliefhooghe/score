@@ -7,7 +7,7 @@
 namespace Scenario
 {
 class IntervalModel;
-class TimeSyncModel;
+class SynchronizationModel;
 class EventModel;
 class StateModel;
 class SummaryInspectorWidget final : public Inspector::InspectorWidgetBase
@@ -17,7 +17,7 @@ public:
       const IdentifiedObjectAbstract* obj,
       const std::set<const IntervalModel*>&
           intervals,
-      const std::set<const TimeSyncModel*>&
+      const std::set<const SynchronizationModel*>&
           timesyncs,
       const std::set<const EventModel*>&
           events,

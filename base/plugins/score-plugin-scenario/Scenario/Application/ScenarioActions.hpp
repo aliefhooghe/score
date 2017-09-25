@@ -62,7 +62,7 @@ SCORE_DECLARE_FOCUSED_PROCESS_CONDITION(Scenario::ScenarioInterface)
 SCORE_DECLARE_SELECTED_OBJECT_CONDITION(Scenario::IntervalModel)
 SCORE_DECLARE_SELECTED_OBJECT_CONDITION(Scenario::EventModel)
 SCORE_DECLARE_SELECTED_OBJECT_CONDITION(Scenario::StateModel)
-SCORE_DECLARE_SELECTED_OBJECT_CONDITION(Scenario::TimeSyncModel)
+SCORE_DECLARE_SELECTED_OBJECT_CONDITION(Scenario::SynchronizationModel)
 
 /// Actions
 // View
@@ -133,7 +133,7 @@ SCORE_DECLARE_ACTION(
     CreateCurves, "Create Curves", Scenario,
     QKeySequence(QObject::tr("Ctrl+J")))
 SCORE_DECLARE_ACTION(
-    MergeTimeSyncs, "&Merge TimeSyncs", Scenario, Qt::SHIFT + Qt::Key_M)
+    MergeSynchronizations, "&Merge Synchronizations", Scenario, Qt::SHIFT + Qt::Key_M)
 SCORE_DECLARE_ACTION(
     ShowRacks, "&Show racks", Scenario, QKeySequence::UnknownKey)
 SCORE_DECLARE_ACTION(

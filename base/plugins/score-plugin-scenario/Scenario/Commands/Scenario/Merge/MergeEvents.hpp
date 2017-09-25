@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MergeTimeSyncs.hpp"
+#include "MergeSynchronizations.hpp"
 #include <Scenario/Commands/Scenario/Displacement/MoveEvent.hpp>
 #include <Scenario/Commands/ScenarioCommandFactory.hpp>
 
@@ -46,9 +46,9 @@ class SCORE_PLUGIN_SCENARIO_EXPORT MergeEvents final
     s.readFrom(event);
     m_serializedEvent = arr;
 
-    m_mergeTimeSyncsCommand = new MergeTimeSyncs{
-        scenario, event.timeSync(),
-        destinantionEvent.timeSync()};
+    m_mergeSynchronizationsCommand = new MergeSynchronizations{
+        scenario, event.synchronization(),
+        destinantionEvent.synchronization()};
   }
 
   void undo(const score::DocumentContext& ctx) const override
@@ -77,17 +77,17 @@ class SCORE_PLUGIN_SCENARIO_EXPORT MergeEvents final
 
     scenar.events.add(recreatedEvent);
 
-    auto& tn = scenar.timeSync(globalEvent.timeSync());
-    if (recreatedEvent->timeSync() != globalEvent.timeSync())
+    auto& tn = scenar.synchronization(globalEvent.synchronization());
+    if (recreatedEvent->synchronization() != globalEvent.synchronization())
     {
       tn.addEvent(m_movingEventId);
       //ScenarioValidityChecker::checkValidity(scenar);
-      m_mergeTimeSyncsCommand->undo(ctx);
+      m_mergeSynchronizationsCommand->undo(ctx);
       //ScenarioValidityChecker::checkValidity(scenar);
     }
     else
     {
-        // recreatedEvent->timeSync == globalEvent->timeSync:
+        // recreatedEvent->synchronization == globalEvent->synchronization:
         // both events originally were on the same time sync.
         // auto it = ossia::find(tn.events(), m_movingEventId);
         // SCORE_ASSERT(it == tn.events().end());
@@ -108,8 +108,8 @@ class SCORE_PLUGIN_SCENARIO_EXPORT MergeEvents final
     auto& destinationEvent = scenar.event(m_destinationEventId);
     auto movingStates = movingEvent.states();
 
-    if (movingEvent.timeSync() != destinationEvent.timeSync())
-      m_mergeTimeSyncsCommand->redo(ctx);
+    if (movingEvent.synchronization() != destinationEvent.synchronization())
+      m_mergeSynchronizationsCommand->redo(ctx);
 
     for (auto& stateId : movingStates)
     {
@@ -118,7 +118,7 @@ class SCORE_PLUGIN_SCENARIO_EXPORT MergeEvents final
       scenar.states.at(stateId).setEventId(m_destinationEventId);
     }
 
-    auto& tn = scenar.timeSync(destinationEvent.timeSync());
+    auto& tn = scenar.synchronization(destinationEvent.synchronization());
     tn.removeEvent(m_movingEventId);
 
     scenar.events.remove(m_movingEventId);
@@ -134,7 +134,7 @@ protected:
   void serializeImpl(DataStreamInput& s) const override
   {
     s << m_scenarioPath << m_movingEventId << m_destinationEventId
-      << m_serializedEvent << m_mergeTimeSyncsCommand->serialize();
+      << m_serializedEvent << m_mergeSynchronizationsCommand->serialize();
   }
 
   void deserializeImpl(DataStreamOutput& s) override
@@ -144,8 +144,8 @@ protected:
     s >> m_scenarioPath >> m_movingEventId >> m_destinationEventId
         >> m_serializedEvent >> cmd;
 
-    m_mergeTimeSyncsCommand = new MergeTimeSyncs{};
-    m_mergeTimeSyncsCommand->deserialize(cmd);
+    m_mergeSynchronizationsCommand = new MergeSynchronizations{};
+    m_mergeSynchronizationsCommand->deserialize(cmd);
   }
 
 private:
@@ -154,7 +154,7 @@ private:
   Id<EventModel> m_destinationEventId;
 
   QByteArray m_serializedEvent;
-  MergeTimeSyncs* m_mergeTimeSyncsCommand{};
+  MergeSynchronizations* m_mergeSynchronizationsCommand{};
 };
 }
 }

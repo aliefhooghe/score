@@ -7,12 +7,12 @@
 #include <Scenario/Document/Interval/IntervalModel.hpp>
 #include <Scenario/Document/Event/EventModel.hpp>
 #include <Scenario/Document/State/StateModel.hpp>
-#include <Scenario/Document/TimeSync/TimeSyncModel.hpp>
+#include <Scenario/Document/Synchronization/SynchronizationModel.hpp>
 
 #include <Inspector/InspectorSectionWidget.hpp>
 #include <Scenario/Inspector/Interval/IntervalSummaryWidget.hpp>
 #include <Scenario/Inspector/Event/EventSummaryWidget.hpp>
-#include <Scenario/Inspector/TimeSync/TimeSyncSummaryWidget.hpp>
+#include <Scenario/Inspector/Synchronization/SynchronizationSummaryWidget.hpp>
 
 namespace Scenario
 {
@@ -20,7 +20,7 @@ SummaryInspectorWidget::SummaryInspectorWidget(
     const IdentifiedObjectAbstract* obj,
     const std::set<const IntervalModel*>&
         intervals,
-    const std::set<const TimeSyncModel*>&
+    const std::set<const SynchronizationModel*>&
         timesyncs,
     const std::set<const EventModel*>&
         events,
@@ -47,7 +47,7 @@ SummaryInspectorWidget::SummaryInspectorWidget(
   m_properties.push_back(tnSection);
   for (auto t : timesyncs)
   {
-    tnSection->addContent(new TimeSyncSummaryWidget{*t, context, this});
+    tnSection->addContent(new SynchronizationSummaryWidget{*t, context, this});
   }
 
   auto evSection
