@@ -114,7 +114,7 @@ void EventActions::setupContextMenu(Process::LayerContextMenuManager& ctxm)
 
         if (std::any_of(sel.cbegin(), sel.cend(), [](const QObject* obj) {
               return dynamic_cast<const EventModel*>(obj);
-            })) // TODO : event or timesync ?
+            })) // TODO : event or synchronization ?
         {
           auto m = menu.addMenu(tr("Event"));
 

@@ -125,7 +125,7 @@ void PlayFromIntervalScenarioPruner::operator()(const Context& exec_ctx)
   // Then we add a interval from the beginning of the scenario to this one,
   // and we do an offset.
 
-  // TODO how to remove also the states ? for instance if there is a state on the first timesync ?
+  // TODO how to remove also the states ? for instance if there is a state on the first synchronization ?
 
 }
 

@@ -100,14 +100,14 @@ void ScenarioViewInterface::on_intervalMoved(
   m_presenter.m_view->update();
 }
 
-void ScenarioViewInterface::on_synchronizationMoved(const SynchronizationPresenter& timesync)
+void ScenarioViewInterface::on_synchronizationMoved(const SynchronizationPresenter& synchronization)
 {
   auto h = m_presenter.m_view->boundingRect().height();
-  timesync.view()->setExtent(timesync.model().extent() * h);
+  synchronization.view()->setExtent(synchronization.model().extent() * h);
 
-  timesync.view()->setPos(
-      {timesync.model().date().toPixels(m_presenter.m_zoomRatio),
-       timesync.model().extent().top() * h});
+  synchronization.view()->setPos(
+      {synchronization.model().date().toPixels(m_presenter.m_zoomRatio),
+       synchronization.model().extent().top() * h});
 
   m_presenter.m_view->update();
 }

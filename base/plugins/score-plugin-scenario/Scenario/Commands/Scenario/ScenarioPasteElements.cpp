@@ -95,7 +95,7 @@ ScenarioPasteElements::ScenarioPasteElements(
   // be easily mapped.
   auto& stack = score::IDocument::documentContext(scenario).commandStack;
 
-  std::vector<SynchronizationModel*> timesyncs;
+  std::vector<SynchronizationModel*> synchronizations;
   std::vector<IntervalModel*> intervals;
   std::vector<EventModel*> events;
   std::vector<StateModel*> states;
@@ -117,10 +117,10 @@ ScenarioPasteElements::ScenarioPasteElements(
   }
   {
     auto json_arr = obj["TimeNodes"].toArray();
-    timesyncs.reserve(json_arr.size());
+    synchronizations.reserve(json_arr.size());
     for (const auto& element : json_arr)
     {
-      timesyncs.emplace_back(new SynchronizationModel{
+      synchronizations.emplace_back(new SynchronizationModel{
           JSONObject::Deserializer{element.toObject()}, nullptr});
     }
   }
@@ -146,8 +146,8 @@ ScenarioPasteElements::ScenarioPasteElements(
   // We generate identifiers for the forthcoming elements
   auto interval_ids = getStrongIdRange2<IntervalModel>(
       intervals.size(), scenario.intervals, intervals);
-  auto timesync_ids = getStrongIdRange2<SynchronizationModel>(
-      timesyncs.size(), scenario.synchronizations, timesyncs);
+  auto synchronization_ids = getStrongIdRange2<SynchronizationModel>(
+      synchronizations.size(), scenario.synchronizations, synchronizations);
   auto event_ids
       = getStrongIdRange2<EventModel>(events.size(), scenario.events, events);
   auto state_ids
@@ -156,17 +156,17 @@ ScenarioPasteElements::ScenarioPasteElements(
   // We set the new ids everywhere
   {
     int i = 0;
-    for (SynchronizationModel* timesync : timesyncs)
+    for (SynchronizationModel* synchronization : synchronizations)
     {
       for (EventModel* event : events)
       {
-        if (event->synchronization() == timesync->id())
+        if (event->synchronization() == synchronization->id())
         {
-          event->changeSynchronization(timesync_ids[i]);
+          event->changeSynchronization(synchronization_ids[i]);
         }
       }
 
-      timesync->setId(timesync_ids[i]);
+      synchronization->setId(synchronization_ids[i]);
       i++;
     }
   }
@@ -177,13 +177,13 @@ ScenarioPasteElements::ScenarioPasteElements(
     {
       {
         auto it = std::find_if(
-            timesyncs.begin(), timesyncs.end(), [&](SynchronizationModel* tn) {
+            synchronizations.begin(), synchronizations.end(), [&](SynchronizationModel* tn) {
               return tn->id() == event->synchronization();
             });
-        SCORE_ASSERT(it != timesyncs.end());
-        auto timesync = *it;
-        timesync->removeEvent(event->id());
-        timesync->addEvent(event_ids[i]);
+        SCORE_ASSERT(it != synchronizations.end());
+        auto synchronization = *it;
+        synchronization->removeEvent(event->id());
+        synchronization->addEvent(event_ids[i]);
       }
 
       for (StateModel* state : states)
@@ -261,19 +261,19 @@ ScenarioPasteElements::ScenarioPasteElements(
   }
 
   // Set the correct positions / dates.
-  // Take the earliest interval or timesync and compute the delta; apply the
+  // Take the earliest interval or synchronization and compute the delta; apply the
   // delta everywhere.
-  if (!intervals.empty() || !timesyncs.empty()) // Should always be the case.
+  if (!intervals.empty() || !synchronizations.empty()) // Should always be the case.
   {
     auto earliestTime = !intervals.empty() ? intervals.front()->startDate()
-                                             : timesyncs.front()->date();
+                                             : synchronizations.front()->date();
     for (const IntervalModel* interval : intervals)
     {
       const auto& t = interval->startDate();
       if (t < earliestTime)
         earliestTime = t;
     }
-    for (const SynchronizationModel* tn : timesyncs)
+    for (const SynchronizationModel* tn : synchronizations)
     {
       const auto& t = tn->date();
       if (t < earliestTime)
@@ -291,7 +291,7 @@ ScenarioPasteElements::ScenarioPasteElements(
     {
       interval->setStartDate(interval->startDate() + delta_t);
     }
-    for (SynchronizationModel* tn : timesyncs)
+    for (SynchronizationModel* tn : synchronizations)
     {
       tn->setDate(tn->date() + delta_t);
     }
@@ -338,12 +338,12 @@ ScenarioPasteElements::ScenarioPasteElements(
     delete elt;
   }
 
-  m_ids_timesyncs.reserve(timesyncs.size());
-  m_json_timesyncs.reserve(timesyncs.size());
-  for (auto elt : timesyncs)
+  m_ids_synchronizations.reserve(synchronizations.size());
+  m_json_synchronizations.reserve(synchronizations.size());
+  for (auto elt : synchronizations)
   {
-    m_ids_timesyncs.push_back(elt->id());
-    m_json_timesyncs.push_back(score::marshall<JSONObject>(*elt));
+    m_ids_synchronizations.push_back(elt->id());
+    m_json_synchronizations.push_back(score::marshall<JSONObject>(*elt));
 
     delete elt;
   }
@@ -373,7 +373,7 @@ void ScenarioPasteElements::undo(const score::DocumentContext& ctx) const
 {
   auto& scenario = m_ts.find(ctx);
 
-  for (const auto& elt : m_ids_timesyncs)
+  for (const auto& elt : m_ids_synchronizations)
   {
     scenario.synchronizations.remove(elt);
   }
@@ -396,12 +396,12 @@ void ScenarioPasteElements::redo(const score::DocumentContext& ctx) const
   Scenario::ProcessModel& scenario = m_ts.find(ctx);
 
   std::vector<SynchronizationModel*> addedSynchronizations;
-  addedSynchronizations.reserve(m_json_timesyncs.size());
+  addedSynchronizations.reserve(m_json_synchronizations.size());
   std::vector<EventModel*> addedEvents;
   addedEvents.reserve(m_json_events.size());
-  for (const auto& timesync : m_json_timesyncs)
+  for (const auto& synchronization : m_json_synchronizations)
   {
-    auto tn = new SynchronizationModel(JSONObject::Deserializer{timesync}, &scenario);
+    auto tn = new SynchronizationModel(JSONObject::Deserializer{synchronization}, &scenario);
     scenario.synchronizations.add(tn);
     addedSynchronizations.push_back(tn);
   }
@@ -431,24 +431,24 @@ void ScenarioPasteElements::redo(const score::DocumentContext& ctx) const
   {
     updateEventExtent(event->id(), scenario);
   }
-  for (const auto& timesync : addedSynchronizations)
+  for (const auto& synchronization : addedSynchronizations)
   {
-    updateSynchronizationExtent(timesync->id(), scenario);
+    updateSynchronizationExtent(synchronization->id(), scenario);
   }
 }
 
 void ScenarioPasteElements::serializeImpl(DataStreamInput& s) const
 {
   s << m_ts
-    << m_ids_timesyncs << m_ids_events << m_ids_states << m_ids_intervals
-    << m_json_timesyncs << m_json_events << m_json_states << m_json_intervals ;
+    << m_ids_synchronizations << m_ids_events << m_ids_states << m_ids_intervals
+    << m_json_synchronizations << m_json_events << m_json_states << m_json_intervals ;
 }
 
 void ScenarioPasteElements::deserializeImpl(DataStreamOutput& s)
 {
   s >> m_ts
-      >> m_ids_timesyncs >> m_ids_events >> m_ids_states >> m_ids_intervals
-      >> m_json_timesyncs >> m_json_events >> m_json_states
+      >> m_ids_synchronizations >> m_ids_events >> m_ids_states >> m_ids_intervals
+      >> m_json_synchronizations >> m_json_events >> m_json_states
       >> m_json_intervals;
 }
 }

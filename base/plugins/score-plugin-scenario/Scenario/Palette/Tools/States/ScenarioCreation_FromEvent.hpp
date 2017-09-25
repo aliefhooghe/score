@@ -45,14 +45,14 @@ public:
       auto move_nothing = new StrongQState<MoveOnNothing>{mainState};
       auto move_state = new StrongQState<MoveOnState>{mainState};
       auto move_event = new StrongQState<MoveOnEvent>{mainState};
-      auto move_timesync = new StrongQState<MoveOnSynchronization>{mainState};
+      auto move_synchronization = new StrongQState<MoveOnSynchronization>{mainState};
 
       pressed->setObjectName("Pressed");
       released->setObjectName("Released");
       move_nothing->setObjectName("Move on Nothing");
       move_state->setObjectName("Move on State");
       move_event->setObjectName("Move on Event");
-      move_timesync->setObjectName("Move on Synchronization");
+      move_synchronization->setObjectName("Move on Synchronization");
 
       // General setup
       mainState->setInitialState(pressed);
@@ -84,7 +84,7 @@ public:
       });
 
       // MoveOnNothing -> MoveOnSynchronization
-      this->add_transition(move_nothing, move_timesync, [&]() {
+      this->add_transition(move_nothing, move_synchronization, [&]() {
         this->rollback();
         createToSynchronization();
       });
@@ -106,7 +106,7 @@ public:
       });
 
       // MoveOnState -> MoveOnSynchronization
-      this->add_transition(move_state, move_timesync, [&]() {
+      this->add_transition(move_state, move_synchronization, [&]() {
         this->rollback();
         createToSynchronization();
       });
@@ -129,33 +129,33 @@ public:
           move_event, move_event, *this);
 
       // MoveOnEvent -> MoveOnSynchronization
-      this->add_transition(move_event, move_timesync, [&]() {
+      this->add_transition(move_event, move_synchronization, [&]() {
         this->rollback();
         createToSynchronization();
       });
 
       /// MoveOnSynchronization -> ...
       // MoveOnSynchronization -> MoveOnNothing
-      this->add_transition(move_timesync, move_nothing, [&]() {
+      this->add_transition(move_synchronization, move_nothing, [&]() {
         this->rollback();
         createToNothing();
       });
 
       // MoveOnSynchronization -> MoveOnState
-      this->add_transition(move_timesync, move_state, [&]() {
+      this->add_transition(move_synchronization, move_state, [&]() {
         this->rollback();
         createToState();
       });
 
       // MoveOnSynchronization -> MoveOnEvent
-      this->add_transition(move_timesync, move_event, [&]() {
+      this->add_transition(move_synchronization, move_event, [&]() {
         this->rollback();
         createToEvent();
       });
 
       // MoveOnSynchronization -> MoveOnSynchronization
       score::make_transition<MoveOnSynchronization_Transition<Scenario_T>>(
-          move_timesync, move_timesync, *this);
+          move_synchronization, move_synchronization, *this);
 
       // What happens in each state.
       QObject::connect(pressed, &QState::entered, [&]() {
@@ -189,7 +189,7 @@ public:
             stateMachine.editionSettings().sequence());
       });
 
-      QObject::connect(move_timesync, &QState::entered, [&]() {
+      QObject::connect(move_synchronization, &QState::entered, [&]() {
         if (this->createdStates.empty())
         {
           this->rollback();

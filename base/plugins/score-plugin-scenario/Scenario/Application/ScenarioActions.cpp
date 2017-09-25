@@ -142,7 +142,7 @@ void EnableWhenScenarioInterfaceObject::action(
     return bool(dynamic_cast<const Scenario::IntervalModel*>(ptr))
            || bool(dynamic_cast<const Scenario::EventModel*>(ptr))
            || bool(dynamic_cast<const Scenario::StateModel*>(ptr));
-  }); // TODO why not timesync
+  }); // TODO why not synchronization
 
   setEnabled(mgr, res);
 }

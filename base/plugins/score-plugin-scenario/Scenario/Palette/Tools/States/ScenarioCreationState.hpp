@@ -79,7 +79,7 @@ protected:
   {
     if (this->hoveredState)
     {
-      // make sure the hovered corresponding timesync dont have a date prior to
+      // make sure the hovered corresponding synchronization dont have a date prior to
       // original state date
       if (getDate(m_parentSM.model(), originalState)
           < getDate(m_parentSM.model(), *this->hoveredState))
@@ -99,7 +99,7 @@ protected:
   {
     if (this->hoveredEvent)
     {
-      // make sure the hovered corresponding timesync dont have a date prior to
+      // make sure the hovered corresponding synchronization dont have a date prior to
       // original state date
       if (getDate(m_parentSM.model(), originalState)
           < getDate(m_parentSM.model(), *this->hoveredEvent))
@@ -120,7 +120,7 @@ protected:
   {
     if (this->hoveredSynchronization)
     {
-      // make sure the hovered corresponding timesync dont have a date prior to
+      // make sure the hovered corresponding synchronization dont have a date prior to
       // original state date
       if (getDate(m_parentSM.model(), originalState)
           < getDate(m_parentSM.model(), *this->hoveredSynchronization))

@@ -60,7 +60,7 @@ void TemporalIntervalHeader::paint(
 
     painter->fillRect(rect, bgColor);
 
-    // Fake timesync continuation
+    // Fake synchronization continuation
     painter->setPen(skin.IntervalHeaderSeparator);
     painter->drawLine(rect.topLeft(), rect.bottomLeft());
     painter->drawLine(rect.topRight(), rect.bottomRight());

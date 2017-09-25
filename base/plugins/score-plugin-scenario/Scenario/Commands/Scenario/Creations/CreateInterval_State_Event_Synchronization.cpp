@@ -47,7 +47,7 @@ void CreateInterval_State_Event_Synchronization::redo(const score::DocumentConte
 {
   auto& scenar = m_command.scenarioPath().find(ctx);
 
-  // Create the end timesync
+  // Create the end synchronization
   ScenarioCreate<SynchronizationModel>::redo(
       m_newSynchronization,
       {m_command.endStateY(), m_command.endStateY()},

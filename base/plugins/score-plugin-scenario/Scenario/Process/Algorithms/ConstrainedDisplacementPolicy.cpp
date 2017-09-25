@@ -124,8 +124,8 @@ void ConstrainedDisplacementPolicy::computeDisplacement(
         }
     }
 
-    auto it = elementsProperties.timesyncs.find(tn.id());
-    if(it != elementsProperties.timesyncs.end())
+    auto it = elementsProperties.synchronizations.find(tn.id());
+    if(it != elementsProperties.synchronizations.end())
     {
         it.value().newDate = it.value().oldDate + dt;
     }
@@ -135,7 +135,7 @@ void ConstrainedDisplacementPolicy::computeDisplacement(
 
         t.oldDate = tn.date();
         t.newDate = t.oldDate + dt;
-        elementsProperties.timesyncs.insert({tn.id(), t});
+        elementsProperties.synchronizations.insert({tn.id(), t});
     }
 }
 

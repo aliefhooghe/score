@@ -79,19 +79,19 @@ void IntervalSaveData::reload(Scenario::IntervalModel& interval) const
 
 template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void DataStreamReader::read(
-    const Scenario::TimenodeProperties& timesyncProperties)
+    const Scenario::TimenodeProperties& synchronizationProperties)
 {
-  m_stream << timesyncProperties.oldDate << timesyncProperties.newDate;
+  m_stream << synchronizationProperties.oldDate << synchronizationProperties.newDate;
 
   insertDelimiter();
 }
 
 template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void DataStreamWriter::write(
-    Scenario::TimenodeProperties& timesyncProperties)
+    Scenario::TimenodeProperties& synchronizationProperties)
 {
 
-  m_stream >> timesyncProperties.oldDate >> timesyncProperties.newDate;
+  m_stream >> synchronizationProperties.oldDate >> synchronizationProperties.newDate;
 
   checkDelimiter();
 }
@@ -149,7 +149,7 @@ template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void DataStreamReader::read(
     const Scenario::ElementsProperties& elementsProperties)
 {
-  m_stream << elementsProperties.timesyncs << elementsProperties.intervals;
+  m_stream << elementsProperties.synchronizations << elementsProperties.intervals;
 
   insertDelimiter();
 }
@@ -159,7 +159,7 @@ SCORE_PLUGIN_SCENARIO_EXPORT void DataStreamWriter::write(
     Scenario::ElementsProperties& elementsProperties)
 {
 
-  m_stream >> elementsProperties.timesyncs >> elementsProperties.intervals;
+  m_stream >> elementsProperties.synchronizations >> elementsProperties.intervals;
 
   checkDelimiter();
 }

@@ -28,15 +28,15 @@ static void removeEventFromSynchronization(
     Scenario::ProcessModel& scenario, const Id<EventModel>& eventId)
 {
   // We have to make a copy else the iterator explodes.
-  auto timesyncs = shallow_copy(scenario.synchronizations.map());
-  for (auto synchronization : timesyncs)
+  auto synchronizations = shallow_copy(scenario.synchronizations.map());
+  for (auto synchronization : synchronizations)
   {
     if (synchronization->removeEvent(eventId))
     {
       scenario.events.remove(eventId);
       if (synchronization->events().isEmpty())
       {
-        // TODO transform this into a class with algorithms on timesyncs +
+        // TODO transform this into a class with algorithms on synchronizations +
         // scenario, etc.
         // Note : this changes the scenario.synchronizations() iterator, however
         // since we return afterwards there is no problem.

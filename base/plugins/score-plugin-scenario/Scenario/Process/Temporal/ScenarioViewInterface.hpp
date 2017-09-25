@@ -18,7 +18,7 @@ public:
 
   void on_eventMoved(const EventPresenter& event);
   void on_intervalMoved(const TemporalIntervalPresenter& interval);
-  void on_synchronizationMoved(const SynchronizationPresenter& timesync);
+  void on_synchronizationMoved(const SynchronizationPresenter& synchronization);
   void on_stateMoved(const StatePresenter& state);
   void on_commentMoved(const CommentBlockPresenter& comment);
 

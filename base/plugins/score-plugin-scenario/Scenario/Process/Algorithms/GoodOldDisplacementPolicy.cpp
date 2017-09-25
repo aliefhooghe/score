@@ -30,7 +30,7 @@ void GoodOldDisplacementPolicy::computeDisplacement(
     const TimeVal& deltaTime,
     ElementsProperties& elementsProperties)
 {
-  // this old behavior supports only the move of one timesync
+  // this old behavior supports only the move of one synchronization
   if (draggedElements.length() != 1)
   {
     qDebug()
@@ -46,19 +46,19 @@ void GoodOldDisplacementPolicy::computeDisplacement(
     GoodOldDisplacementPolicy::getRelatedSynchronizations(
         scenario, firstSynchronizationMovedId, synchronizationsToTranslate);
 
-    // put each concerned timesync in modified elements and compute new values
+    // put each concerned synchronization in modified elements and compute new values
     for (const auto& curSynchronizationId : synchronizationsToTranslate)
     {
       auto& curSynchronization = scenario.synchronizations.at(curSynchronizationId);
 
-      // if timesync NOT already in element properties, create new element
+      // if synchronization NOT already in element properties, create new element
       // properties and set the old date
-      auto tn_it = elementsProperties.timesyncs.find(curSynchronizationId);
-      if (tn_it == elementsProperties.timesyncs.end())
+      auto tn_it = elementsProperties.synchronizations.find(curSynchronizationId);
+      if (tn_it == elementsProperties.synchronizations.end())
       {
         TimenodeProperties t;
         t.oldDate = curSynchronization.date();
-        tn_it = elementsProperties.timesyncs.emplace(curSynchronizationId, std::move(t)).first;
+        tn_it = elementsProperties.synchronizations.emplace(curSynchronizationId, std::move(t)).first;
       }
 
       // put the new date
@@ -83,7 +83,7 @@ void GoodOldDisplacementPolicy::computeDisplacement(
             auto curIntervalId = *optCurIntervalId;
             auto& curInterval = scenario.intervals.at(curIntervalId);
 
-            // if timesync NOT already in element properties, create new
+            // if synchronization NOT already in element properties, create new
             // element properties and set old values
             auto cur_interval_it
                 = elementsProperties.intervals.find(curIntervalId);
@@ -105,8 +105,8 @@ void GoodOldDisplacementPolicy::computeDisplacement(
             TimeVal startDate;
 
             // if prev tnode has moved take updated value else take existing
-            auto it = elementsProperties.timesyncs.find(startTnodeId);
-            if (it != elementsProperties.timesyncs.cend())
+            auto it = elementsProperties.synchronizations.find(startTnodeId);
+            if (it != elementsProperties.synchronizations.cend())
             {
               startDate = it.value().newDate;
             }
@@ -116,7 +116,7 @@ void GoodOldDisplacementPolicy::computeDisplacement(
             }
 
             const auto& endDate
-                = elementsProperties.timesyncs[curSynchronizationId].newDate;
+                = elementsProperties.synchronizations[curSynchronizationId].newDate;
 
             TimeVal newDefaultDuration = endDate - startDate;
             TimeVal deltaBounds = newDefaultDuration

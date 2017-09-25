@@ -241,7 +241,7 @@ void TemporalIntervalView::paint(
     // TODO try to prevent allocation here by storing two copies instead
     painter.fillRect(rect, bgColor);
 
-    // Fake timesync continuation
+    // Fake synchronization continuation
     skin.IntervalRackPen.setBrush(skin.RackSideBorder.getBrush());
     painter.setPen(skin.IntervalRackPen);
     painter.drawLine(rect.topLeft(), rect.bottomLeft());

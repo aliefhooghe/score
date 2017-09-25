@@ -104,7 +104,7 @@ public:
     QVector<Id<SynchronizationModel>> draggedElements;
     draggedElements.push_back(
         scenario.events.at(eventId).synchronization()); // retrieve corresponding
-                                                 // timesync and store it in
+                                                 // synchronization and store it in
                                                  // array
 
     // the displacement is computed here and we don't need to know how.

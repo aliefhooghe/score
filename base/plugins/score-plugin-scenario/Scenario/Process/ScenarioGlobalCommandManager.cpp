@@ -111,7 +111,7 @@ void removeSelection(
   score::SelectionDispatcher s{ctx.selectionStack};
   s.setAndCommit({});
   ctx.selectionStack.clear();
-  // We have to remove the first / last timesyncs / events from the selection.
+  // We have to remove the first / last synchronizations / events from the selection.
   erase_if(sel, [&](auto&& elt) { return elt->id_val() == startId_val(); });
 
   if (!sel.empty())
@@ -193,12 +193,12 @@ void mergeSynchronizations(
     const Scenario::ProcessModel& scenario,
     const score::CommandStackFacade& f)
 {
-  // We merge all the furthest timesyncs to the first one.
-  auto timesyncs = make_ordered<SynchronizationModel>(scenario);
+  // We merge all the furthest synchronizations to the first one.
+  auto synchronizations = make_ordered<SynchronizationModel>(scenario);
   auto states = make_ordered<StateModel>(scenario);
   auto events = make_ordered<EventModel>(scenario);
 
-  if (timesyncs.size() < 2)
+  if (synchronizations.size() < 2)
   {
     if (states.size() == 2)
     {
@@ -213,9 +213,9 @@ void mergeSynchronizations(
   }
   else
   {
-    auto it = timesyncs.begin();
+    auto it = synchronizations.begin();
     auto first_tn = (*it)->id();
-    for (++it; it != timesyncs.end(); ++it)
+    for (++it; it != synchronizations.end(); ++it)
     {
       auto cmd = new Command::MergeSynchronizations(
           scenario, first_tn, (*it)->id());

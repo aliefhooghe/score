@@ -19,8 +19,8 @@ getDate(const Scenario::ProcessModel& scenario, const Id<EventModel>& event)
 }
 
 inline TimeVal getDate(
-    const Scenario::ProcessModel& scenario, const Id<SynchronizationModel>& timesync)
+    const Scenario::ProcessModel& scenario, const Id<SynchronizationModel>& synchronization)
 {
-  return scenario.synchronizations.at(timesync).date();
+  return scenario.synchronizations.at(synchronization).date();
 }
 }

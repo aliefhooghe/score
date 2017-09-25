@@ -91,7 +91,7 @@ void StateActions::setupContextMenu(Process::LayerContextMenuManager& ctxm)
 
         if (ossia::any_of(
                 sel,
-                matches<Scenario::StateModel>{})) // TODO : event or timesync ?
+                matches<Scenario::StateModel>{})) // TODO : event or synchronization ?
         {
           auto stateSubmenu = menu.addMenu(tr("State"));
           stateSubmenu->setObjectName("State");

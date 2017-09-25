@@ -21,7 +21,7 @@ SummaryInspectorWidget::SummaryInspectorWidget(
     const std::set<const IntervalModel*>&
         intervals,
     const std::set<const SynchronizationModel*>&
-        timesyncs,
+        synchronizations,
     const std::set<const EventModel*>&
         events,
     const std::set<const StateModel*>&
@@ -45,7 +45,7 @@ SummaryInspectorWidget::SummaryInspectorWidget(
   auto tnSection
       = new Inspector::InspectorSectionWidget{tr("Syncs"), false, this};
   m_properties.push_back(tnSection);
-  for (auto t : timesyncs)
+  for (auto t : synchronizations)
   {
     tnSection->addContent(new SynchronizationSummaryWidget{*t, context, this});
   }

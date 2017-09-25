@@ -20,7 +20,7 @@ public:
 
   void updateInterval(const Scenario::TemporalIntervalPresenter& pres);
 
-  void updateSynchronization(const Scenario::SynchronizationPresenter& timesync);
+  void updateSynchronization(const Scenario::SynchronizationPresenter& synchronization);
 
   void updateState(const Scenario::StatePresenter& state);
 

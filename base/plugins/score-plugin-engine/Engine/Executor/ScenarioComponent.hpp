@@ -87,7 +87,7 @@ public:
   }
   const auto& synchronizations() const
   {
-    return m_ossia_timesyncs;
+    return m_ossia_synchronizations;
   }
 
   void stop() override;
@@ -125,7 +125,7 @@ protected:
   score::hash_map<Id<Scenario::StateModel>, std::shared_ptr<StateComponent>>
       m_ossia_states;
   score::hash_map<Id<Scenario::SynchronizationModel>, std::shared_ptr<SynchronizationComponent>>
-      m_ossia_timesyncs;
+      m_ossia_synchronizations;
   score::hash_map<Id<Scenario::EventModel>, std::shared_ptr<EventComponent>>
       m_ossia_timeevents;
 

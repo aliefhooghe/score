@@ -48,7 +48,7 @@ protected:
 private:
   Path<Scenario::ProcessModel> m_path;
 
-  // For timesyncs that may be removed when there is only a single event
+  // For synchronizations that may be removed when there is only a single event
   QVector<QPair<Id<SynchronizationModel>, QByteArray>> m_maybeRemovedSynchronizations;
 
   QVector<QPair<Id<CommentBlockModel>, QByteArray>> m_removedComments;

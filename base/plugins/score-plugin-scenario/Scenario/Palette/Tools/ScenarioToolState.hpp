@@ -96,19 +96,19 @@ protected:
   OptionalId<SynchronizationModel>
   itemToSynchronizationId(const QGraphicsItem* pressedItem) const
   {
-    const auto& timesync
+    const auto& synchronization
         = static_cast<const SynchronizationView*>(pressedItem)->presenter().model();
-    return timesync.parent() == &this->m_palette.model()
-               ? timesync.id()
+    return synchronization.parent() == &this->m_palette.model()
+               ? synchronization.id()
                : OptionalId<SynchronizationModel>{};
   }
   OptionalId<SynchronizationModel>
   itemToTriggerId(const QGraphicsItem* pressedItem) const
   {
-      const auto& timesync
+      const auto& synchronization
               = static_cast<const SynchronizationView*>(pressedItem->parentItem())->presenter().model();
-      return timesync.parent() == &this->m_palette.model()
-              ? timesync.id()
+      return synchronization.parent() == &this->m_palette.model()
+              ? synchronization.id()
               : OptionalId<SynchronizationModel>{};
   }
   OptionalId<IntervalModel>
@@ -180,7 +180,7 @@ protected:
     };
 
     // Each time :
-    // Check if it is an event / timesync / interval /state
+    // Check if it is an event / synchronization / interval /state
     // The itemToXXXId methods check that we are in the correct scenario, too.
     switch (item->type())
     {

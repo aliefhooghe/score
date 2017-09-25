@@ -24,7 +24,7 @@ class SCORE_PLUGIN_SCENARIO_EXPORT CreateSynchronization_Event_State final
   SCORE_COMMAND_DECL(
       ScenarioCommandFactoryName(),
       CreateSynchronization_Event_State,
-      "Create a timesync, an event and a state")
+      "Create a synchronization, an event and a state")
 public:
   CreateSynchronization_Event_State(
       const Scenario::ProcessModel& scenario, TimeVal date, double stateY);

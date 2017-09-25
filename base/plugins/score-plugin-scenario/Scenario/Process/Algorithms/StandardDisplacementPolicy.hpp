@@ -33,9 +33,9 @@ public:
       ProcessScaleMethod&& scaleMethod,
       const ElementsProperties& propsToUpdate)
   {
-    // update each affected timesyncs
-    for (auto it = propsToUpdate.timesyncs.cbegin();
-         it != propsToUpdate.timesyncs.cend();
+    // update each affected synchronizations
+    for (auto it = propsToUpdate.synchronizations.cbegin();
+         it != propsToUpdate.synchronizations.cend();
          ++it)
     {
       auto& curTimenodeToUpdate = scenario.synchronization(it.key());
@@ -101,9 +101,9 @@ public:
       ProcessScaleMethod&& scaleMethod,
       const ElementsProperties& propsToUpdate)
   {
-    // update each affected timesyncs with old values
-    for (auto it = propsToUpdate.timesyncs.cbegin();
-         it != propsToUpdate.timesyncs.cend();
+    // update each affected synchronizations with old values
+    for (auto it = propsToUpdate.synchronizations.cbegin();
+         it != propsToUpdate.synchronizations.cend();
          ++it)
     {
       auto& curTimenodeToUpdate = scenario.synchronization(it.key());

@@ -40,7 +40,7 @@ public:
   /** The class **/
   EventModel(
       const Id<EventModel>&,
-      const Id<SynchronizationModel>& timesync,
+      const Id<SynchronizationModel>& synchronization,
       const VerticalExtent& extent,
       const TimeVal& date,
       QObject* parent);

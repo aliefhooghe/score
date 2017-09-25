@@ -99,7 +99,7 @@ void ScenarioComponent::init()
     m_checker = fact->make(process(), ctx.doc.app, m_properties);
     if (m_checker)
     {
-      m_properties.timesyncs[Id<Scenario::SynchronizationModel>(0)].date = 0;
+      m_properties.synchronizations[Id<Scenario::SynchronizationModel>(0)].date = 0;
       m_checker->computeDisplacement(m_pastTn, m_properties);
     }
   }
@@ -156,8 +156,8 @@ std::function<void ()> ScenarioComponentBase::removing(
     const Scenario::SynchronizationModel& e, SynchronizationComponent& c)
 {
   // FIXME this will certainly break stuff WRT member variables, coherency checker, etc.
-  auto it = m_ossia_timesyncs.find(e.id());
-  if(it != m_ossia_timesyncs.end())
+  auto it = m_ossia_synchronizations.find(e.id());
+  if(it != m_ossia_synchronizations.end())
   {
     std::shared_ptr<ossia::scenario> proc = std::dynamic_pointer_cast<ossia::scenario>(m_ossia_process);
     m_ctx.executionQueue.enqueue([proc,tn=c.OSSIASynchronization()] {
@@ -167,7 +167,7 @@ std::function<void ()> ScenarioComponentBase::removing(
 
     it->second->cleanup();
 
-    return [=] { m_ossia_timesyncs.erase(it); };
+    return [=] { m_ossia_synchronizations.erase(it); };
   }
   return {};
 }
@@ -285,7 +285,7 @@ EventComponent* ScenarioComponentBase::make<EventComponent, Scenario::EventModel
   m_ossia_timeevents.insert({ev.id(), elt});
 
   // Find the parent time sync for the new event
-  auto& nodes = m_ossia_timesyncs;
+  auto& nodes = m_ossia_synchronizations;
   SCORE_ASSERT(nodes.find(ev.synchronization()) != nodes.end());
   auto tn = nodes.at(ev.synchronization());
 
@@ -316,7 +316,7 @@ SynchronizationComponent* ScenarioComponentBase::make<SynchronizationComponent, 
 {
   // Create the object
   auto elt = std::make_shared<SynchronizationComponent>(tn, m_ctx, id, this);
-  m_ossia_timesyncs.insert({tn.id(), elt});
+  m_ossia_synchronizations.insert({tn.id(), elt});
 
   bool must_add = false;
   // The OSSIA API already creates the start time sync so we must use it if available
@@ -447,7 +447,7 @@ void ScenarioComponentBase::synchronizationCallback(
     m_pastTn.push_back(tn->scoreSynchronization().id());
 
     // Fix Timenode
-    auto& curTnProp = m_properties.timesyncs[tn->scoreSynchronization().id()];
+    auto& curTnProp = m_properties.synchronizations[tn->scoreSynchronization().id()];
     curTnProp.date = double(date);
     curTnProp.date_max = curTnProp.date;
     curTnProp.date_min = curTnProp.date;
@@ -464,7 +464,7 @@ void ScenarioComponentBase::synchronizationCallback(
       auto& cstrProp = m_properties.intervals[cstrId];
 
       cstrProp.newMin.setMSecs(
-            curTnProp.date - m_properties.timesyncs[startTn.id()].date);
+            curTnProp.date - m_properties.synchronizations[startTn.id()].date);
       cstrProp.newMax = cstrProp.newMin;
 
       cstrProp.status = Scenario::ExecutionStatus::Happened;

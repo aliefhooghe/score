@@ -23,7 +23,7 @@ ScenarioInspectorWidgetFactoryWrapper::make(
     QWidget* parent) const
 {
   std::set<const IntervalModel*> intervals;
-  std::set<const SynchronizationModel*> timesyncs;
+  std::set<const SynchronizationModel*> synchronizations;
   std::set<const EventModel*> events;
   std::set<const StateModel*> states;
 
@@ -45,7 +45,7 @@ ScenarioInspectorWidgetFactoryWrapper::make(
           continue;
         states.insert(st);
         events.insert(ev);
-        timesyncs.insert(tn);
+        synchronizations.insert(tn);
       }
     }
     else if (auto ev = dynamic_cast<const EventModel*>(elt))
@@ -54,11 +54,11 @@ ScenarioInspectorWidgetFactoryWrapper::make(
       if (!tn)
         continue;
       events.insert(ev);
-      timesyncs.insert(tn);
+      synchronizations.insert(tn);
     }
     else if (auto tn = dynamic_cast<const SynchronizationModel*>(elt))
     {
-      timesyncs.insert(tn);
+      synchronizations.insert(tn);
     }
     else if (auto cstr = dynamic_cast<const IntervalModel*>(elt))
     {
@@ -70,17 +70,17 @@ ScenarioInspectorWidgetFactoryWrapper::make(
       return new StateInspectorWidget{**states.begin(), doc, parent};
   if (events.size() == 1 && intervals.empty())
       return new EventInspectorWidget{**events.begin(), doc, parent};
-  if (timesyncs.size() == 1 && intervals.empty())
-    return new SynchronizationInspectorWidget{**timesyncs.begin(), doc, parent};
+  if (synchronizations.size() == 1 && intervals.empty())
+    return new SynchronizationInspectorWidget{**synchronizations.begin(), doc, parent};
 
-  if (intervals.size() == 1 && timesyncs.empty())
+  if (intervals.size() == 1 && synchronizations.empty())
   {
     return IntervalInspectorFactory{}.make(
         {*intervals.begin()}, doc, parent);
   }
 
   return new SummaryInspectorWidget{
-      abstr, intervals, timesyncs, events, states, doc, parent}; // the default InspectorWidgetBase need
+      abstr, intervals, synchronizations, events, states, doc, parent}; // the default InspectorWidgetBase need
                                        // an only IdentifiedObject : this will
                                        // be "abstr"
 }

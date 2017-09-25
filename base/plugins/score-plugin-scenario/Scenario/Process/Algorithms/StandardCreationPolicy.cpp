@@ -65,14 +65,14 @@ void ScenarioCreate<EventModel>::undo(
 
 EventModel& ScenarioCreate<EventModel>::redo(
     const Id<EventModel>& id,
-    SynchronizationModel& timesync,
+    SynchronizationModel& synchronization,
     const VerticalExtent& extent,
     Scenario::ProcessModel& s)
 {
-  auto ev = new EventModel{id, timesync.id(), extent, timesync.date(), &s};
+  auto ev = new EventModel{id, synchronization.id(), extent, synchronization.date(), &s};
 
   s.events.add(ev);
-  timesync.addEvent(id);
+  synchronization.addEvent(id);
 
   return *ev;
 }

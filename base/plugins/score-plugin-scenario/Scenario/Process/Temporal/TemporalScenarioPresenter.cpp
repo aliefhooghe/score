@@ -610,9 +610,9 @@ void TemporalScenarioPresenter::updateAllElements()
     m_viewInterface.on_eventMoved(event);
   }
 
-  for (auto& timesync : m_synchronizations)
+  for (auto& synchronization : m_synchronizations)
   {
-    m_viewInterface.on_synchronizationMoved(timesync);
+    m_viewInterface.on_synchronizationMoved(synchronization);
   }
 
   for (auto& comment : m_comments)

@@ -58,7 +58,7 @@ struct IntervalProperties : public IntervalSaveData
 
 struct ElementsProperties
 {
-  score::hash_map<Id<SynchronizationModel>, TimenodeProperties> timesyncs;
+  score::hash_map<Id<SynchronizationModel>, TimenodeProperties> synchronizations;
   score::hash_map<Id<IntervalModel>, IntervalProperties> intervals;
 };
 }

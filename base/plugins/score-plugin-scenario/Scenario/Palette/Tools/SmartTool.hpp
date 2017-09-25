@@ -189,7 +189,7 @@ public:
       }, // event
       [&](const Id<SynchronizationModel>& id) {
         this->localSM().postEvent(new MoveOnSynchronization_Event{id, sp});
-      }, // timesync
+      }, // synchronization
       [&](const Id<IntervalModel>& id) {
         this->localSM().postEvent(new MoveOnInterval_Event{id, sp});
       }, // interval

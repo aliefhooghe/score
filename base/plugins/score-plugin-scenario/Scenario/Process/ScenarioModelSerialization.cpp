@@ -56,12 +56,12 @@ void DataStreamReader::read(
   }
 
   // Timenodes
-  const auto& timesyncs = scenario.synchronizations;
-  m_stream << (int32_t)timesyncs.size();
+  const auto& synchronizations = scenario.synchronizations;
+  m_stream << (int32_t)synchronizations.size();
 
-  for (const auto& timesync : timesyncs)
+  for (const auto& synchronization : synchronizations)
   {
-    readFrom(timesync);
+    readFrom(synchronization);
   }
 
   // Events
@@ -113,10 +113,10 @@ void DataStreamWriter::write(Scenario::ProcessModel& scenario)
   }
 
   // Timenodes
-  int32_t timesync_count;
-  m_stream >> timesync_count;
+  int32_t synchronization_count;
+  m_stream >> synchronization_count;
 
-  for (; timesync_count-- > 0;)
+  for (; synchronization_count-- > 0;)
   {
     auto tnmodel = new Scenario::SynchronizationModel{*this, &scenario};
     scenario.synchronizations.add(tnmodel);
@@ -200,8 +200,8 @@ void JSONObjectWriter::write(Scenario::ProcessModel& scenario)
     scenario.intervals.add(interval);
   }
 
-  const auto& timesyncs = obj["TimeNodes"].toArray();
-  for (const auto& json_vref : timesyncs)
+  const auto& synchronizations = obj["TimeNodes"].toArray();
+  for (const auto& json_vref : synchronizations)
   {
     auto tnmodel = new Scenario::SynchronizationModel{
         JSONObject::Deserializer{json_vref.toObject()}, &scenario};

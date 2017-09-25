@@ -86,12 +86,12 @@ void ViewUpdater::updateInterval(
   m_presenter.m_view->update();
 }
 
-void ViewUpdater::updateSynchronization(const Scenario::SynchronizationPresenter& timesync)
+void ViewUpdater::updateSynchronization(const Scenario::SynchronizationPresenter& synchronization)
 {
-  timesync.view()->setExtent(2. * extent());
+  synchronization.view()->setExtent(2. * extent());
 
-  timesync.view()->setPos(
-      {timesync.model().date().toPixels(m_presenter.m_zoomRatio),
+  synchronization.view()->setPos(
+      {synchronization.model().date().toPixels(m_presenter.m_zoomRatio),
        extent().top()});
 
   m_presenter.m_view->update();

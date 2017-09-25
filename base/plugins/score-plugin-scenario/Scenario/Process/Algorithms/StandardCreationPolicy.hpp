@@ -48,7 +48,7 @@ public:
 
   static EventModel& redo(
       const Id<EventModel>& id,
-      SynchronizationModel& timesync,
+      SynchronizationModel& synchronization,
       const VerticalExtent& extent,
       Scenario::ProcessModel& s);
 };

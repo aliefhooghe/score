@@ -106,8 +106,8 @@ Component::Component(
 
   // TODO also states in BasEelement
   // TODO put graphical settings somewhere.
-  auto main_start_node = loop->get_start_timesync();
-  auto main_end_node = loop->get_end_timesync();
+  auto main_start_node = loop->get_start_synchronization();
+  auto main_end_node = loop->get_end_synchronization();
   auto main_start_event = *main_start_node->get_time_events().begin();
   auto main_end_event = *main_end_node->get_time_events().begin();
 

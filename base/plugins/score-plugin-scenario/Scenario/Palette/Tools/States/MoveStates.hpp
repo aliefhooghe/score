@@ -288,7 +288,7 @@ public:
         if (!this->clickedSynchronization)
           return;
 
-        // Get the 1st event on the timesync.
+        // Get the 1st event on the synchronization.
         auto& scenar = stateMachine.model();
         auto& tn = scenar.synchronization(*this->clickedSynchronization);
         const auto& ev_id = tn.events().first();

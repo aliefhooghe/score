@@ -65,15 +65,15 @@ public:
     DataStream::Deserializer s{m_serializedSynchronization};
     auto recreatedTn = new SynchronizationModel{s, &scenar};
 
-    auto events_in_timesync = recreatedTn->events();
+    auto events_in_synchronization = recreatedTn->events();
     // we remove and re-add events in recreated Tn
     // to ensure correct parentship between elements.
-    for (auto evId : events_in_timesync)
+    for (auto evId : events_in_synchronization)
     {
       recreatedTn->removeEvent(evId);
       globalTn.removeEvent(evId);
     }
-    for (auto evId : events_in_timesync)
+    for (auto evId : events_in_synchronization)
     {
       recreatedTn->addEvent(evId);
     }

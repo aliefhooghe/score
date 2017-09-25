@@ -30,10 +30,10 @@ class IdentifiedObject;
 
 template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void
-DataStreamReader::read(const Scenario::SynchronizationModel& timesync)
+DataStreamReader::read(const Scenario::SynchronizationModel& synchronization)
 {
-  m_stream << timesync.m_date << timesync.m_events << timesync.m_extent
-           << timesync.m_active << timesync.m_expression;
+  m_stream << synchronization.m_date << synchronization.m_events << synchronization.m_extent
+           << synchronization.m_active << synchronization.m_expression;
 
   insertDelimiter();
 }
@@ -41,10 +41,10 @@ DataStreamReader::read(const Scenario::SynchronizationModel& timesync)
 
 template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void
-DataStreamWriter::write(Scenario::SynchronizationModel& timesync)
+DataStreamWriter::write(Scenario::SynchronizationModel& synchronization)
 {
-  m_stream >> timesync.m_date >> timesync.m_events >> timesync.m_extent
-      >> timesync.m_active >> timesync.m_expression;
+  m_stream >> synchronization.m_date >> synchronization.m_events >> synchronization.m_extent
+      >> synchronization.m_active >> synchronization.m_expression;
 
 
   checkDelimiter();
@@ -53,31 +53,31 @@ DataStreamWriter::write(Scenario::SynchronizationModel& timesync)
 
 template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void
-JSONObjectReader::read(const Scenario::SynchronizationModel& timesync)
+JSONObjectReader::read(const Scenario::SynchronizationModel& synchronization)
 {
-  obj[strings.Date] = toJsonValue(timesync.date());
-  obj[strings.Events] = toJsonArray(timesync.m_events);
-  obj[strings.Extent] = toJsonValue(timesync.m_extent);
+  obj[strings.Date] = toJsonValue(synchronization.date());
+  obj[strings.Events] = toJsonArray(synchronization.m_events);
+  obj[strings.Extent] = toJsonValue(synchronization.m_extent);
 
   QJsonObject trig;
-  trig[strings.Active] = timesync.m_active;
-  trig[strings.Expression] = toJsonObject(timesync.m_expression);
+  trig[strings.Active] = synchronization.m_active;
+  trig[strings.Expression] = toJsonObject(synchronization.m_expression);
   obj[strings.Trigger] = trig;
 }
 
 
 template <>
 SCORE_PLUGIN_SCENARIO_EXPORT void
-JSONObjectWriter::write(Scenario::SynchronizationModel& timesync)
+JSONObjectWriter::write(Scenario::SynchronizationModel& synchronization)
 {
-  timesync.m_date = fromJsonValue<TimeVal>(obj[strings.Date]);
-  timesync.m_extent = fromJsonValue<Scenario::VerticalExtent>(obj[strings.Extent]);
+  synchronization.m_date = fromJsonValue<TimeVal>(obj[strings.Date]);
+  synchronization.m_extent = fromJsonValue<Scenario::VerticalExtent>(obj[strings.Extent]);
 
-  fromJsonValueArray(obj[strings.Events].toArray(), timesync.m_events);
+  fromJsonValueArray(obj[strings.Events].toArray(), synchronization.m_events);
 
   State::Expression t;
   const auto& trig_obj = obj[strings.Trigger].toObject();
   fromJsonObject(trig_obj[strings.Expression], t);
-  timesync.m_expression = std::move(t);
-  timesync.m_active = trig_obj[strings.Active].toBool();
+  synchronization.m_expression = std::move(t);
+  synchronization.m_active = trig_obj[strings.Active].toBool();
 }

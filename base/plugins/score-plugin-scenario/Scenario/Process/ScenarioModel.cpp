@@ -53,7 +53,7 @@ ProcessModel::ProcessModel(
 
   ScenarioCreate<StateModel>::redo(m_startStateId, start_ev, 0.02, *this);
 
-  // At the end because plug-ins depend on the start/end timesync & al being
+  // At the end because plug-ins depend on the start/end synchronization & al being
   // here
   metadata().setInstanceName(*this);
 }
@@ -111,11 +111,11 @@ void ProcessModel::setDurationAndScale(const TimeVal& newDuration)
 {
   double scale = newDuration / duration();
 
-  for (auto& timesync : synchronizations)
+  for (auto& synchronization : synchronizations)
   {
-    timesync.setDate(timesync.date() * scale);
+    synchronization.setDate(synchronization.date() * scale);
     // Since events will also move we do not need
-    // to move the timesync.
+    // to move the synchronization.
   }
 
   for (auto& event : events)

@@ -123,7 +123,7 @@ protected:
   }
 
 private:
-  QObject* m_parent{}; // Parent for the intervals, timesyncs, etc.
+  QObject* m_parent{}; // Parent for the intervals, synchronizations, etc.
                        // If inheriting, m_parent should be this.
 };
 

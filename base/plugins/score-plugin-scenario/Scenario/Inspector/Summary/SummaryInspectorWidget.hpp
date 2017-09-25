@@ -18,7 +18,7 @@ public:
       const std::set<const IntervalModel*>&
           intervals,
       const std::set<const SynchronizationModel*>&
-          timesyncs,
+          synchronizations,
       const std::set<const EventModel*>&
           events,
       const std::set<const StateModel*>&

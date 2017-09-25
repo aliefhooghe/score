@@ -21,12 +21,12 @@ namespace Scenario
 {
 EventModel::EventModel(
     const Id<EventModel>& id,
-    const Id<SynchronizationModel>& timesync,
+    const Id<SynchronizationModel>& synchronization,
     const VerticalExtent& extent,
     const TimeVal& date,
     QObject* parent)
     : Entity{id, Metadata<ObjectKey_k, EventModel>::get(), parent}
-    , m_synchronization{timesync}
+    , m_synchronization{synchronization}
     , m_condition{}
     , m_extent{extent}
     , m_date{date}

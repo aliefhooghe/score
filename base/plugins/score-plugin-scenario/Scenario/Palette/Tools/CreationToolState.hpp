@@ -64,7 +64,7 @@ public:
 
     this->localSM().addState(m_createFromEventState);
 
-    //// Create from a timesync ////
+    //// Create from a synchronization ////
     m_createFromSynchronizationState
         = new Creation_FromSynchronization<Scenario_T, ToolPalette_T>{
             this->m_palette, this->m_palette.model(),
