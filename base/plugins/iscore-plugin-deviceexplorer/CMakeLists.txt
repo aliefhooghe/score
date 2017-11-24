@@ -131,14 +131,6 @@ target_link_libraries(iscore_plugin_deviceexplorer
         PRIVATE
                 QProgressIndicator)
 
-if(OSSIA_DNSSD)
-target_sources(${PROJECT_NAME} PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/Explorer/Widgets/ZeroConf/ZeroconfBrowser.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Explorer/Widgets/ZeroConf/ZeroconfBrowser.cpp")
-
-target_sources(${PROJECT_NAME} PRIVATE $<TARGET_OBJECTS:ServusQt>)
-target_include_directories(${PROJECT_NAME} PRIVATE ${OSSIA_3RDPARTY_FOLDER}/Servus)
-endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core)
 setup_iscore_plugin(iscore_plugin_deviceexplorer)
 setup_iscore_tests(Tests)
